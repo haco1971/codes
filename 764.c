@@ -21,7 +21,8 @@
 #include <openssl/rsa.h>
 #include <openssl/x509.h>
 #include <openssl/evp.h>
-
+#include <openssl/rc4.h>
+#include <openssl/md5.h>
 /* update this if you add architectures */
 #define MAX_ARCH 138
 
