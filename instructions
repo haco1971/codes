@@ -1,0 +1,2 @@
+find su permetion
+find / -perm -u=s -type f >/dev/null
