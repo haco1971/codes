@@ -1,4 +1,13 @@
 
+    https://capturetheflag.withgoogle.com/#beginners/
+    https://github.com/google/google-ctf
+    
+    
+    
+    
+    
+    
+    
     Find World Writable Folders
     find / -xdev -type d -perm -0002 -ls 2> /dev/null
     =====================================================
