@@ -1,4 +1,6 @@
 
+    sqlmap -r login.req --level 5 --risk 3
+    
     https://capturetheflag.withgoogle.com/#beginners/
     https://github.com/google/google-ctf
     https://www.youtube.com/watch?v=qDYwcIf0LZw
