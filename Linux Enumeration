@@ -1,4 +1,9 @@
-
+https://www.alternativesec.xyz/alternativesec/2017/04/16/OSCP-Adventures/
+https://www.hashcat.online/
+    https://gpuhash.me/
+    https://0day.today/
+    https://www.onlinehashcrack.com/tools-cap-to-hccapx-converter.php
+    https://labs.nettitude.com/tools/rocktastic/
     sqlmap -r login.req --level 5 --risk 3
     
     https://capturetheflag.withgoogle.com/#beginners/
