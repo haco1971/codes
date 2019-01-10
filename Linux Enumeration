@@ -31,7 +31,7 @@ https://www.hashcat.online/
   https://sathisharthars.com/2014/06/10/exploit-heartbleed-openssl-vulnerability-using-kali-linux/  
     https://www.youtube.com/watch?time_continue=649&v=Uenupgv-Dwo
     https://youtu.be/Uenupgv-Dwo
-    
+    https://www.serra.pw/how-to-create-metasploitable3-virtual-image/
     Find World Writable Folders
     find / -xdev -type d -perm -0002 -ls 2> /dev/null
     =====================================================
