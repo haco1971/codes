@@ -1,0 +1,3 @@
+file upgrade.bin
+binwalk upgrade.bin
+dd if=upgrade.bin skip=256 of=HG.sqfs bs=1
