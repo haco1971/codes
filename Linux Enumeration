@@ -527,3 +527,13 @@ bccaf2ce2ee947a9d4c71f1d24db78ad
 DELETED pptl/c3po.md
 Index: pptl/c3po.md
 ==================================================================
+GET /dashboard.php?PHPSESSID=97hca4hurd2jveu9pubiuo4331 HTTP/1.1
+Host: 10.0.1.21
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101 Firefox/60.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate
+Referer: http://10.0.1.21/
+Cookie: PHPSESSID=97hca4hurd2jveu9pubiuo4331
+Connection: close
+Upgrade-Insecure-Requests: 1
