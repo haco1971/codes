@@ -28,6 +28,19 @@ https://2018game.picoctf.com/game
 ' OR '1'='1' --
 ' OR '1'='1' {
 ' OR '1'='1' /* 
+
+stego/da-vinci =====>HTB{M0n@_L1z@_!s_D3@D}
+Forest         =====>HTB{AmAz1nGsKilLzZBr0}
+Hackerman     =====>HTB{3v1l_c0rp}
+ Milkshake  =====> HTB{strawberry milkshake}
+pusheen-loves-graphs ====>HTB{fUn_w17h_CFGz}
+Raining Blood====>HTB{h1dd1ng_d4t4_b3tw33n_mp3_fr4m3s_is_not_funny!!}
+Senseless Behaviour ====>HTB{BLINDASABAT}
+Unified ====>HTB{tr1th3m1u5_1499}
+Widescreen  ====>HTB{c3r34l_k1ll3r}
+
+
+
 http://104.41.44.121:8080/index.php?lang=C:\\ftp\\upload\\exploit
 inurl:/add_vhost.php?lang=
 https://nvr1.mobileguard.hu/vsaas/login
